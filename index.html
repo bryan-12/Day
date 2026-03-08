@@ -1,202 +1,147 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Para Day</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Poppins', sans-serif; background-color: #0b1a2e; touch-action: manipulation; }
-        
-        /* Pantalla de Inicio */
-        #start-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #0b1a2e; display: flex; justify-content: center; align-items: center; z-index: 999; transition: opacity 2s ease; cursor: pointer; padding: 20px; }
-        #start-btn { background: linear-gradient(45deg, #d35400, #f39c12); color: white; border: none; padding: 30px; font-size: clamp(0.9rem, 4.5vw, 1.2rem); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); text-align: center; width: 90%; max-width: 450px; line-height: 1.6; }
+<style>
+    /* ... (Tus estilos de sky, stars, ground y garden se mantienen igual) ... */
 
-        /* Elementos del Paisaje */
-        #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
-        #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 8s ease; }
-        #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 18vh; background: linear-gradient(to top, #0f2b10, #1b4d1d); z-index: 10; }
-        #garden { position: absolute; bottom: 10vh; left: 0; width: 100%; height: 65vh; z-index: 15; pointer-events: none; }
-        
-        /* FOTOS: Pequeñas y arriba para no tapar frases */
-        #photo-container { position: absolute; top: 8%; left: 50%; transform: translateX(-50%); z-index: 50; display: none; }
-        .photo-frame { 
-            width: 180px; 
-            height: 180px; 
-            border-radius: 15px; 
-            border: 4px solid white; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            object-fit: cover; 
-            opacity: 0; 
-            transition: opacity 1.5s ease; 
-            animation: kenburns 10s linear infinite; 
-        }
-        @keyframes kenburns { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+    /* Contenedor del bloque: Frase - Foto - Frase */
+    .sequence-item {
+        position: absolute;
+        bottom: -20vh; /* Empieza fuera por debajo */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 50;
+        pointer-events: none;
+        opacity: 0;
+        /* La animación dura 14 segundos para que suba lento y elegante */
+        animation: floatUpAndFade 14s linear forwards;
+    }
 
-        /* Flores */
-        .flower { position: absolute; bottom: 0; transform-origin: bottom center; animation: growAndFade 28s ease-in-out forwards, sway 5s ease-in-out infinite alternate; }
-        @keyframes growAndFade { 0% { transform: scale(0); opacity: 0; } 10% { transform: scale(1); opacity: 1; } 90% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.5); opacity: 0; } }
-        @keyframes sway { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }
-        
-        .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 60; animation: fly 1s ease-out forwards; }
-        @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
+    @keyframes floatUpAndFade {
+        0% { transform: translate(-50%, 0); opacity: 0; }
+        10% { opacity: 1; }
+        85% { opacity: 1; }
+        100% { transform: translate(-50%, -100vh); opacity: 0; }
+    }
 
-        /* FRASES: Desde abajo */
-        .phrase-container { position: absolute; bottom: 20vh; left: 50%; transform: translateX(-50%); width: 85%; max-width: 380px; display: flex; justify-content: center; z-index: 25; pointer-events: none; }
-        .phrase { color: white; font-family: 'Dancing Script', cursive; font-size: clamp(1.5rem, 7vw, 2.2rem); text-shadow: 2px 2px 10px rgba(0,0,0,1); text-align: center; line-height: 1.2; opacity: 0; animation: floatUp 14s linear forwards; }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(-70vh); opacity: 0; } }
-    </style>
-</head>
-<body onclick="createSparkle(event)">
+    .phrase {
+        color: white;
+        font-family: 'Dancing Script', cursive;
+        font-size: clamp(1.4rem, 6vw, 2rem);
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        text-align: center;
+        margin: 5px 0;
+    }
 
-    <audio id="musica">
-        <source src="Mi_universo.mp3" type="audio/mpeg">
-    </audio>
+    .photo-frame {
+        width: 190px;
+        height: 190px;
+        border-radius: 12px;
+        border: 4px solid white;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        object-fit: cover;
+        margin: 10px 0;
+    }
+</style>
 
-    <div id="start-screen" onclick="startMagic()">
-        <div id="start-btn">
-            Feliz día, Day ❤️<br>
-            <span style="font-size: 0.8em; font-weight: 300; opacity: 0.9;">Recuerda que eres lo mejor de esta vida, cuenta conmigo</span><br>
-            <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7; letter-spacing: 2px;">(Toca la pantalla)</p>
-        </div>
-    </div>
+<script>
+    // Tus 17 fotos
+    const fotos = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg"];
+    
+    // Tus 34 frases exactas
+    let phrases = [
+        "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
+        "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
+        "Tu sonrisa es un regalo", "Eres alguien muy especial", "Mereces calma y paz", "Qué bien se siente verte feliz", 
+        "Eres una mujer excepcional", "Tu determinación es inspiradora", "Eres paz en el caos", "Nunca dudes de ti <3", 
+        "Eres absolutamente hermosa", "Te admiro profundamente", "Eres el pensamiento más bonito", "Contigo el tiempo se detiene", 
+        "Tu luz es única", "Eres capaz de todo", "Mereces lo mejor y lo mas lindo", "Eres una gran persona", 
+        "Admiro tu esencia", "Eres pura magia", "Tu bienestar importa mucho", "Eres auténtica", 
+        "Sigue brillando siempre", "Eres valiente", 
+        "Me gusta compartir momentos contigo", "Gracias por tu paciencia", "Te esperaré", "Gracias por todo"
+    ]; // Quitamos el random para que tú controles el orden si quieres, o déjalo si prefieres azar.
 
-    <div id="photo-container"><img id="photo-display" class="photo-frame"></div>
+    let fotoIndex = 0;
 
-    <div id="sky"></div>
-    <div id="stars"></div>
-    <div id="garden"></div>
-    <div id="ground"></div>
-
-    <script>
-        // Lista de tus 17 fotos (asegúrate de que todas sean .jpg en GitHub)
-        const fotos = [
-            "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg",
-            "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg",
-            "16.jpg", "17.jpg" 
-        ];
-
-        let phrases = [
-            "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
-            "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
-            "Tu sonrisa es un regalo", "Eres alguien muy especial", "Mereces calma y paz", "Qué bien se siente verte feliz", 
-            "Eres una mujer excepcional", "Tu determinación es inspiradora", "Eres paz en el caos", "Nunca dudes de ti <3", 
-            "Eres absolutamente hermosa", "Te admiro profundamente", "Eres el pensamiento más bonito", "Contigo el tiempo se detiene", 
-            "Tu luz es única", "Eres capaz de todo", "Mereces lo mejor y lo mas lindo", "Eres una gran persona", 
-            "Admiro tu esencia", "Eres pura magia", "Tu bienestar importa mucho", "Eres auténtica", 
-            "Sigue brillando siempre", "Eres valiente", 
-            "Me gusta compartir momentos contigo", "Gracias por tu paciencia", "Te esperaré", "Gracias por todo"
-        ].sort(() => Math.random() - 0.5);
-
-        const sunflowerSVG = (size) => `
-            <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}" preserveAspectRatio="xMidYMid meet">
-                <path d="M50,250 Q45,160 50,100" stroke="#2d5a27" stroke-width="6" fill="none"/>
-                <g fill="#ffc107">
-                    ${Array.from({length:10}, (_,i)=>`<ellipse cx="50" cy="100" rx="7" ry="24" transform="rotate(${i*36} 50 100)" />`).join('')}
-                </g>
-                <circle cx="50" cy="100" r="16" fill="#4e342e"/>
-            </svg>
-        `;
-        
-        const higanbanaSVG = (size) => `
-            <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}" preserveAspectRatio="xMidYMid meet">
-                <path d="M50,250 L50,130" stroke="#1b4d1d" stroke-width="3" fill="none"/>
-                <g stroke="#d32f2f" fill="none" stroke-width="2.5">
-                    ${Array.from({length:8}, (_,i)=>`<path d="M50,130 Q30,70 ${-10+i*15},120" transform="rotate(${i*45} 50 130)"/>`).join('')}
-                </g>
-                <circle cx="50" cy="130" r="4" fill="#b71c1c"/>
-            </svg>
-        `;
-
-        function createSparkle(e) {
-            for(let i=0; i<6; i++){
-                const s = document.createElement('div');
-                s.className = 'sparkle';
-                s.style.left = e.pageX + (Math.random()*24-12) + 'px';
-                s.style.top = e.pageY + (Math.random()*24-12) + 'px';
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 1000);
-            }
-        }
-
-        function changeSky() {
-            const sky = document.getElementById('sky');
-            const colors = ["#0b1a2e", "#16213e", "#1a1a2e", "#0b1a2e"];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            sky.style.background = randomColor;
-            document.getElementById('stars').style.opacity = "1";
-        }
-
-        function spawnFlower() {
-            const flower = document.createElement('div');
-            flower.className = 'flower';
-            const isSunflower = Math.random() > 0.45;
-            const size = (Math.random() * 40 + 45) * (isSunflower ? 1 : 0.7);
-            flower.style.left = (Math.random() * 92 + 4) + '%';
-            flower.style.zIndex = Math.floor(size); 
-            flower.innerHTML = isSunflower ? sunflowerSVG(size) : higanbanaSVG(size);
-            document.getElementById('garden').appendChild(flower);
-            setTimeout(() => flower.remove(), 28000);
-        }
-
-        function mostrarFoto() {
-            const contenedor = document.getElementById('photo-container');
-            const img = document.getElementById('photo-display');
-            img.src = fotos[Math.floor(Math.random() * fotos.length)];
-            contenedor.style.display = 'block';
-            setTimeout(() => { img.style.opacity = '1'; }, 100);
+    function spawnSequence() {
+        if (phrases.length < 2) {
+            // Mensaje Final al terminar las frases
             setTimeout(() => {
-                img.style.opacity = '0';
-                setTimeout(() => { contenedor.style.display = 'none'; }, 1500);
-            }, 6500); // La foto se ve por 6.5 segundos
+                const final = document.createElement('div');
+                final.className = 'sequence-item';
+                final.style.bottom = '40vh';
+                final.style.animation = "none";
+                final.style.opacity = "1";
+                final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.5rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
+                document.body.appendChild(final);
+            }, 5000);
+            return;
         }
 
-        function startMagic() {
-            const audio = document.getElementById('musica');
-            audio.play();
-            document.getElementById('start-screen').style.opacity = '0';
+        const container = document.createElement('div');
+        container.className = 'sequence-item';
+
+        // 1. Frase arriba
+        const p1 = document.createElement('div');
+        p1.className = 'phrase';
+        p1.innerText = phrases.shift(); // Toma la primera del arreglo
+
+        // 2. Foto al centro
+        const img = document.createElement('img');
+        img.className = 'photo-frame';
+        img.src = fotos[fotoIndex % fotos.length];
+        fotoIndex++;
+
+        // 3. Frase abajo
+        const p2 = document.createElement('div');
+        p2.className = 'phrase';
+        p2.innerText = phrases.shift(); // Toma la siguiente
+
+        container.appendChild(p1);
+        container.appendChild(img);
+        container.appendChild(p2);
+
+        document.body.appendChild(container);
+
+        // Borrar del código después de que suba para no saturar
+        setTimeout(() => container.remove(), 15000);
+    }
+
+    function startMagic() {
+        const audio = document.getElementById('musica');
+        audio.play();
+        document.getElementById('start-screen').style.opacity = '0';
+        
+        setTimeout(() => {
+            document.getElementById('start-screen').remove();
             
-            setTimeout(() => {
-                document.getElementById('start-screen').remove();
-                
-                setInterval(changeSky, 25000);
-                setInterval(spawnFlower, 600);
-                setInterval(mostrarFoto, 16000); // Una foto cada 16 seg
-                
-                // Estrellas de fondo
-                const starsContainer = document.getElementById('stars');
-                for (let i = 0; i < 80; i++) {
-                    const s = document.createElement('div');
-                    s.style.cssText = `position:absolute; width:1.5px; height:1.5px; background:white; left:${Math.random()*100}%; top:${Math.random()*65}%; border-radius:50%; box-shadow:0 0 4px #fff;`;
-                    starsContainer.appendChild(s);
-                }
+            // Efectos visuales de fondo
+            setInterval(changeSky, 20000);
+            setInterval(spawnFlower, 700);
+            
+            // Crear estrellas
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 80; i++) {
+                const s = document.createElement('div');
+                s.style.cssText = `position:absolute; width:1.5px; height:1.5px; background:white; left:${Math.random()*100}%; top:${Math.random()*65}%; border-radius:50%; box-shadow:0 0 4px #fff;`;
+                starsContainer.appendChild(s);
+            }
 
-                // Ciclo de Frases
-                const phraseInterval = setInterval(() => {
-                    if (phrases.length === 0) {
-                        clearInterval(phraseInterval);
-                        // Mensaje final cuando se acaban las frases
-                        setTimeout(() => {
-                            const container = document.createElement('div');
-                            container.className = 'phrase-container';
-                            container.style.bottom = '40vh'; // Más centrado al final
-                            container.innerHTML = `<div class="phrase" style="opacity:1; animation:none; color:#f39c12; font-size: 2.5rem; font-weight:bold;">Para Day, I miss you</div>`;
-                            document.body.appendChild(container);
-                        }, 8000);
-                        return;
-                    }
-                    const container = document.createElement('div');
-                    container.className = 'phrase-container';
-                    const p = document.createElement('div');
-                    p.className = 'phrase';
-                    p.innerText = phrases.pop();
-                    container.appendChild(p);
-                    document.body.appendChild(container);
-                    setTimeout(() => container.remove(), 12000);
-                }, 6500); // Una frase cada 6.5 seg
-            }, 2000);
-        }
-    </script>
-</body>
-</html>
+            // LANZAR SECUENCIAS
+            spawnSequence(); // La primera sale de inmediato
+            
+            // Cada 14.5 segundos sale un grupo nuevo (Frase-Foto-Frase)
+            // 17 grupos * 14.5 seg = 246.5 segundos (Casi los 4:10 min exactos)
+            const masterInterval = setInterval(() => {
+                if (phrases.length > 0) {
+                    spawnSequence();
+                } else {
+                    clearInterval(masterInterval);
+                }
+            }, 14500); 
+
+        }, 2000);
+    }
+</script>
