@@ -10,10 +10,10 @@
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Poppins', sans-serif; background-color: #0b1a2e; touch-action: manipulation; }
         
         #start-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #0b1a2e; display: flex; justify-content: center; align-items: center; z-index: 999; transition: opacity 2s ease; cursor: pointer; padding: 20px; }
-        #start-btn { background: linear-gradient(45deg, #d35400, #f39c12); color: white; border: none; padding: 30px; font-size: clamp(0.9rem, 4.5vw, 1.2rem); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); text-align: center; width: 90%; max-width: 450px; line-height: 1.6; }
+        #start-btn { background: linear-gradient(45deg, #d35400, #f39c12); color: white; border: none; padding: 30px; font-size: clamp(0.9rem, 4.5vw, 1.2rem); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); text-align: center; width: 90%; max-width: 450px; }
 
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
-        #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 8s ease; }
+        #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 1; }
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 18vh; background: linear-gradient(to top, #0f2b10, #1b4d1d); z-index: 10; }
         #garden { position: absolute; bottom: 10vh; left: 0; width: 100%; height: 65vh; z-index: 15; pointer-events: none; }
         
@@ -28,9 +28,8 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 60; animation: fly 1s ease-out forwards; }
         @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
 
-        .phrase-container { position: absolute; bottom: 20vh; left: 50%; transform: translateX(-50%); width: 85%; max-width: 380px; z-index: 25; pointer-events: none; }
-        .phrase { color: white; font-family: 'Dancing Script', cursive; font-size: clamp(1.5rem, 7vw, 2.2rem); text-shadow: 2px 2px 10px rgba(0,0,0,1); text-align: center; line-height: 1.2; opacity: 0; }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(-70vh); opacity: 0; } }
+        .phrase-container { position: absolute; bottom: 30vh; left: 50%; transform: translateX(-50%); width: 85%; max-width: 380px; z-index: 25; pointer-events: none; }
+        .phrase { color: white; font-family: 'Dancing Script', cursive; font-size: 1.8rem; text-shadow: 2px 2px 10px rgba(0,0,0,1); text-align: center; opacity: 0; transition: opacity 1s; }
     </style>
 </head>
 <body onclick="createSparkle(event)">
@@ -74,9 +73,11 @@
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => document.getElementById('start-screen').style.display = 'none', 2000);
             
+            // Iniciar efectos visuales
             setInterval(changeSky, 25000);
             setInterval(spawnFlower, 600);
             
+            // Iniciar secuencia de frases/fotos
             interval = setInterval(() => {
                 if (index < 17) {
                     mostrarPareja(index);
@@ -88,36 +89,48 @@
         }
 
         function mostrarPareja(i) {
-            // Foto
             const cont = document.getElementById('photo-container');
             const img = document.getElementById('photo-display');
             img.src = fotos[i];
             cont.style.display = 'block';
             img.style.opacity = '1';
             
-            // Frases (Arriba y Abajo)
-            const c1 = document.createElement('div'); c1.className = 'phrase-container'; c1.style.bottom = '60vh';
-            c1.innerHTML = `<div class="phrase" style="animation: floatUp 10s linear forwards;">${frases[i*2]}</div>`;
-            const c2 = document.createElement('div'); c2.className = 'phrase-container'; c2.style.bottom = '20vh';
-            c2.innerHTML = `<div class="phrase" style="animation: floatUp 10s linear forwards;">${frases[i*2+1]}</div>`;
-            document.body.appendChild(c1); document.body.appendChild(c2);
+            const p1 = document.createElement('div'); p1.className = 'phrase-container'; p1.style.top = '40%';
+            p1.innerHTML = `<div class="phrase" style="opacity:1;">${frases[i*2]}</div>`;
+            const p2 = document.createElement('div'); p2.className = 'phrase-container'; p2.style.bottom = '15%';
+            p2.innerHTML = `<div class="phrase" style="opacity:1;">${frases[i*2+1]}</div>`;
+            document.body.appendChild(p1); document.body.appendChild(p2);
 
-            setTimeout(() => { img.style.opacity = '0'; c1.remove(); c2.remove(); }, 10000);
+            setTimeout(() => { img.style.opacity = '0'; p1.remove(); p2.remove(); }, 10000);
         }
 
         document.getElementById('musica').onended = () => {
+            clearInterval(interval);
             setTimeout(() => {
                 const s = document.getElementById('start-screen');
-                s.style.display = 'flex';
-                s.style.opacity = '1';
+                s.style.display = 'flex'; s.style.opacity = '1';
                 document.getElementById('start-content').innerHTML = "¡Gracias por ver!<br>Ver de nuevo ❤️";
             }, 5000);
         };
-        
-        // Mantener funciones originales de flores y estrellas
-        function createSparkle(e) { /* ... tu función original ... */ }
-        function changeSky() { /* ... tu función original ... */ }
-        function spawnFlower() { /* ... tu función original ... */ }
+
+        function createSparkle(e) {
+            for(let i=0; i<6; i++){
+                const s = document.createElement('div'); s.className = 'sparkle';
+                s.style.left = e.pageX + (Math.random()*24-12) + 'px'; s.style.top = e.pageY + (Math.random()*24-12) + 'px';
+                document.body.appendChild(s); setTimeout(() => s.remove(), 1000);
+            }
+        }
+        function changeSky() {
+            const sky = document.getElementById('sky');
+            const colors = ["#0b1a2e", "#16213e", "#1a1a2e", "#0b1a2e"];
+            sky.style.background = colors[Math.floor(Math.random() * colors.length)];
+        }
+        function spawnFlower() {
+            const f = document.createElement('div'); f.className = 'flower';
+            f.style.left = (Math.random() * 92 + 4) + '%';
+            f.innerHTML = `<svg width="50" height="100" viewBox="0 0 100 250"><path d="M50,250 Q45,160 50,100" stroke="#2d5a27" stroke-width="6" fill="none"/><circle cx="50" cy="100" r="16" fill="#ffc107"/></svg>`;
+            document.getElementById('garden').appendChild(f); setTimeout(() => f.remove(), 28000);
+        }
     </script>
 </body>
 </html>
