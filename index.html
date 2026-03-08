@@ -7,11 +7,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Poppins', sans-serif; background-color: #0b1a2e; touch-action: manipulation; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; font-family: 'Poppins', sans-serif; 
+            background-color: #0b1a2e; touch-action: manipulation; 
+        }
         
         /* Pantalla de Inicio */
-        #start-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #0b1a2e; display: flex; justify-content: center; align-items: center; z-index: 999; transition: opacity 2s ease; cursor: pointer; padding: 20px; }
-        #start-btn { background: linear-gradient(45deg, #d35400, #f39c12); color: white; border: none; padding: 30px; font-size: clamp(0.9rem, 4.5vw, 1.2rem); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); text-align: center; width: 90%; max-width: 450px; line-height: 1.6; }
+        #start-screen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-color: #0b1a2e; display: flex; justify-content: center; 
+            align-items: center; z-index: 999; transition: opacity 2s ease; 
+            cursor: pointer; padding: 20px; 
+        }
+        #start-btn { 
+            background: linear-gradient(45deg, #d35400, #f39c12); color: white; 
+            border: none; padding: 30px; font-size: clamp(0.9rem, 4.5vw, 1.2rem); 
+            border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+            text-align: center; width: 90%; max-width: 450px; line-height: 1.6; 
+        }
 
         /* Elementos del Paisaje */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
@@ -27,57 +41,50 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 60; animation: fly 1s ease-out forwards; }
         @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
 
-        /* --- NUEVA ESTRUCTURA UNIFICADA --- */
-        
-        /* Contenedor del BLOQUE COMPLETO (Frase-Foto-Frase) que SUBE */
+        /* --- BLOQUE CENTRAL (FRASE - FOTO - FRASE) --- */
         .sequence-item {
             position: absolute;
-            bottom: -20vh; /* Empieza fuera por debajo */
+            top: 45%; 
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             width: 90%;
-            max-width: 400px;
+            max-width: 420px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 50;
+            z-index: 100;
             pointer-events: none;
             opacity: 0;
-            
-            /* Animación unificada de subida lenta y elegante */
-            animation: floatUpAndFade 14s linear forwards;
+            /* Animación de aparición y desaparición suave */
+            animation: floatingFade 12.5s ease-in-out forwards;
         }
 
-        /* Animación que mueve TODO el contenedor */
-        @keyframes floatUpAndFade {
-            0% { transform: translate(-50%, 10vh); opacity: 0; }
-            10% { opacity: 1; }
-            85% { opacity: 1; }
-            100% { transform: translate(-50%, -100vh); opacity: 0; }
+        @keyframes floatingFade {
+            0% { opacity: 0; transform: translate(-50%, -48%); }
+            15% { opacity: 1; transform: translate(-50%, -50%); }
+            85% { opacity: 1; transform: translate(-50%, -50%); }
+            100% { opacity: 0; transform: translate(-50%, -52%); }
         }
 
-        /* Estilo de las Frases */
         .phrase {
             color: white;
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.4rem, 6vw, 2rem);
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            font-size: clamp(1.5rem, 7vw, 2.2rem);
+            text-shadow: 0 4px 15px rgba(0,0,0,0.9);
             text-align: center;
-            margin: 5px 0; /* Margen pequeño para no separarlas mucho */
-            line-height: 1.2;
+            margin: 15px 0;
+            line-height: 1.3;
         }
 
-        /* Estilo de la Foto (SIN animaciones KenBurns) */
         .photo-frame {
-            width: 190px;
-            height: 190px;
-            border-radius: 12px;
-            border: 4px solid white;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            width: 220px;
+            height: 220px;
+            border-radius: 20px;
+            border: 6px solid white;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.7);
             object-fit: cover;
-            margin: 10px 0; /* Espacio para que respire la foto */
-            display: block;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -101,14 +108,14 @@
     <div id="ground"></div>
 
     <script>
-        // Lista de tus 17 fotos (asegúrate de que todas sean .jpg en GitHub)
+        // Lista de tus 17 fotos
         const fotos = [
             "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg",
             "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg",
             "16.jpg", "17.jpg" 
         ];
 
-        // Lista de frases (34 exactas para 17 bloques)
+        // Lista de frases (34 frases para 17 bloques)
         let phrases = [
             "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
             "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
@@ -119,14 +126,11 @@
             "Admiro tu esencia", "Eres pura magia", "Tu bienestar importa mucho", "Eres auténtica", 
             "Sigue brillando siempre", "Eres valiente", 
             "Me gusta compartir momentos contigo", "Gracias por tu paciencia", "Te esperaré", "Gracias por todo"
-        ]; // Si quieres orden aleatorio, descomenta la siguiente línea:
-        // ].sort(() => Math.random() - 0.5);
+        ];
 
-        // Variables de control
         let fotoIndex = 0;
         let fraseIndex = 0;
 
-        // SVGs de las flores
         const sunflowerSVG = (size) => `
             <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}" preserveAspectRatio="xMidYMid meet">
                 <path d="M50,250 Q45,160 50,100" stroke="#2d5a27" stroke-width="6" fill="none"/>
@@ -178,58 +182,44 @@
             setTimeout(() => flower.remove(), 28000);
         }
 
-        // --- FUNCIÓN DE SECUENCIA CORREGIDA ---
         function spawnSequence() {
-            // Si ya no quedan frases, detener
             if (fraseIndex >= phrases.length) {
-                // Mensaje final (Opcional, sale 8 seg después del último bloque)
+                // Mensaje final cuando termina la música
                 setTimeout(() => {
-                    if(!document.querySelector('.final-message')) { // Evitar duplicados
-                        const final = document.createElement('div');
-                        final.className = 'sequence-item final-message';
-                        final.style.bottom = '40vh'; // Más centrado
-                        final.style.animation = "none"; // Sin subida
-                        final.style.opacity = "1";
-                        final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.5rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
-                        document.body.appendChild(final);
-                    }
-                }, 10000);
+                    const final = document.createElement('div');
+                    final.className = 'sequence-item';
+                    final.style.animation = "none";
+                    final.style.opacity = "1";
+                    final.style.top = "50%";
+                    final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.8rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
+                    document.body.appendChild(final);
+                }, 8000);
                 return;
             }
 
-            // Crear el Contenedor Maestro (El que sube)
             const container = document.createElement('div');
             container.className = 'sequence-item';
 
-            // 1. Primera Frase (Arriba)
             const p1 = document.createElement('div');
             p1.className = 'phrase';
-            p1.innerText = phrases[fraseIndex];
-            fraseIndex++;
+            p1.innerText = phrases[fraseIndex++];
 
-            // 2. Foto (Centro)
             const img = document.createElement('img');
             img.className = 'photo-frame';
-            // Usar index de foto y reiniciar si llega al final (aunque hay 17 exactas)
             img.src = fotos[fotoIndex % fotos.length];
             fotoIndex++;
 
-            // 3. Segunda Frase (Abajo)
             const p2 = document.createElement('div');
             p2.className = 'phrase';
-            p2.innerText = phrases[fraseIndex];
-            fraseIndex++;
+            p2.innerText = phrases[fraseIndex++];
 
-            // Armar el bloque: Texto -> Foto -> Texto
             container.appendChild(p1);
             container.appendChild(img);
             container.appendChild(p2);
 
-            // Añadir al body
             document.body.appendChild(container);
 
-            // Eliminar del DOM después de que suba (14s animación + margen)
-            setTimeout(() => container.remove(), 15000);
+            setTimeout(() => container.remove(), 13500);
         }
 
         function startMagic() {
@@ -240,30 +230,23 @@
             setTimeout(() => {
                 document.getElementById('start-screen').remove();
                 
-                // Efectos de fondo
                 setInterval(changeSky, 20000);
                 setInterval(spawnFlower, 700);
                 
-                // Estrellas de fondo
                 const starsContainer = document.getElementById('stars');
-                for (let i = 0; i < 80; i++) {
+                for (let i = 0; i < 90; i++) {
                     const s = document.createElement('div');
-                    s.style.cssText = `position:absolute; width:1.5px; height:1.5px; background:white; left:${Math.random()*100}%; top:${Math.random()*65}%; border-radius:50%; box-shadow:0 0 4px #fff;`;
+                    s.style.cssText = `position:absolute; width:1.5px; height:1.5px; background:white; left:${Math.random()*100}%; top:${Math.random()*65}%; border-radius:50%; box-shadow:0 0 5px #fff;`;
                     starsContainer.appendChild(s);
                 }
 
-                // --- INICIAR SECUENCIAS SINCRONIZADAS ---
-                // Primera secuencia sale de inmediato
+                // Iniciar secuencias cada 14.5 segundos para durar 4:10 min
                 spawnSequence();
-                
-                // Crear un bloque cada 14.5 segundos. 
-                // Explicación: 250 seg canción / 17 bloques = 14.7 seg por bloque.
-                // Usamos 14.5 seg (14500ms) para un pequeño margen al final.
                 const masterInterval = setInterval(() => {
                     if (fraseIndex < phrases.length) {
                         spawnSequence();
                     } else {
-                        clearInterval(masterInterval); // Detener timer cuando se acaben las frases
+                        clearInterval(masterInterval);
                     }
                 }, 14500); 
 
