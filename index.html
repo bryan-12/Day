@@ -22,12 +22,12 @@
         }
         #start-btn { 
             background: linear-gradient(45deg, #d35400, #f39c12); color: white; 
-            border: none; padding: 30px; font-size: clamp(0.9rem, 4.5vw, 1.2rem); 
+            border: none; padding: 25px; font-size: clamp(0.9rem, 4.2vw, 1.1rem); 
             border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
-            text-align: center; width: 90%; max-width: 450px; line-height: 1.6; 
+            text-align: center; width: 90%; max-width: 400px; line-height: 1.5; 
         }
 
-        /* Elementos del Paisaje */
+        /* Paisaje y Elementos Visuales */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
         #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 8s ease; }
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 18vh; background: linear-gradient(to top, #0f2b10, #1b4d1d); z-index: 10; }
@@ -41,14 +41,14 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 60; animation: fly 1s ease-out forwards; }
         @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
 
-        /* --- BLOQUE CENTRAL (FRASE - FOTO - FRASE) --- */
+        /* --- BLOQUE CENTRAL OPTIMIZADO PARA MÓVIL --- */
         .sequence-item {
             position: absolute;
             top: 45%; 
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 420px;
+            width: 95%;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -56,7 +56,6 @@
             z-index: 100;
             pointer-events: none;
             opacity: 0;
-            /* Animación de aparición y desaparición suave */
             animation: floatingFade 12.5s ease-in-out forwards;
         }
 
@@ -70,21 +69,24 @@
         .phrase {
             color: white;
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.5rem, 7vw, 2.2rem);
-            text-shadow: 0 4px 15px rgba(0,0,0,0.9);
+            font-size: clamp(1.3rem, 6.5vw, 1.9rem);
+            text-shadow: 0 4px 12px rgba(0,0,0,1);
             text-align: center;
-            margin: 15px 0;
-            line-height: 1.3;
+            margin: 10px 0;
+            line-height: 1.2;
+            width: 100%;
         }
 
         .photo-frame {
-            width: 220px;
-            height: 220px;
-            border-radius: 20px;
-            border: 6px solid white;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.7);
-            object-fit: cover;
+            width: 180px;         /* Tamaño reducido para mejor ajuste en móvil */
+            height: 180px;
+            border-radius: 15px;
+            border: 4px solid white;
+            background-color: rgba(255, 255, 255, 0.05); /* Fondo sutil */
+            object-fit: contain;  /* Muestra la foto completa sin recortar */
             margin: 10px 0;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
     </style>
 </head>
@@ -97,7 +99,7 @@
     <div id="start-screen" onclick="startMagic()">
         <div id="start-btn">
             Feliz día, Day ❤️<br>
-            <span style="font-size: 0.8em; font-weight: 300; opacity: 0.9;">Recuerda que eres lo mejor de esta vida, cuenta conmigo</span><br>
+            <span style="font-size: 0.85em; font-weight: 300; opacity: 0.9;">Eres lo mejor de esta vida, cuenta conmigo siempre</span><br>
             <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7; letter-spacing: 2px;">(Toca la pantalla)</p>
         </div>
     </div>
@@ -108,14 +110,12 @@
     <div id="ground"></div>
 
     <script>
-        // Lista de tus 17 fotos
         const fotos = [
             "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg",
             "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg",
             "16.jpg", "17.jpg" 
         ];
 
-        // Lista de frases (34 frases para 17 bloques)
         let phrases = [
             "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
             "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
@@ -174,7 +174,7 @@
             const flower = document.createElement('div');
             flower.className = 'flower';
             const isSunflower = Math.random() > 0.45;
-            const size = (Math.random() * 40 + 45) * (isSunflower ? 1 : 0.7);
+            const size = (Math.random() * 35 + 40) * (isSunflower ? 1 : 0.75);
             flower.style.left = (Math.random() * 92 + 4) + '%';
             flower.style.zIndex = Math.floor(size); 
             flower.innerHTML = isSunflower ? sunflowerSVG(size) : higanbanaSVG(size);
@@ -184,15 +184,16 @@
 
         function spawnSequence() {
             if (fraseIndex >= phrases.length) {
-                // Mensaje final cuando termina la música
                 setTimeout(() => {
-                    const final = document.createElement('div');
-                    final.className = 'sequence-item';
-                    final.style.animation = "none";
-                    final.style.opacity = "1";
-                    final.style.top = "50%";
-                    final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.8rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
-                    document.body.appendChild(final);
+                    if(!document.querySelector('.final-message')) {
+                        const final = document.createElement('div');
+                        final.className = 'sequence-item final-message';
+                        final.style.animation = "none";
+                        final.style.opacity = "1";
+                        final.style.top = "50%";
+                        final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.3rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
+                        document.body.appendChild(final);
+                    }
                 }, 8000);
                 return;
             }
@@ -218,8 +219,7 @@
             container.appendChild(p2);
 
             document.body.appendChild(container);
-
-            setTimeout(() => container.remove(), 13500);
+            setTimeout(() => container.remove(), 13000);
         }
 
         function startMagic() {
@@ -231,7 +231,7 @@
                 document.getElementById('start-screen').remove();
                 
                 setInterval(changeSky, 20000);
-                setInterval(spawnFlower, 700);
+                setInterval(spawnFlower, 750);
                 
                 const starsContainer = document.getElementById('stars');
                 for (let i = 0; i < 90; i++) {
@@ -240,7 +240,7 @@
                     starsContainer.appendChild(s);
                 }
 
-                // Iniciar secuencias cada 14.5 segundos para durar 4:10 min
+                // Ciclo: 17 bloques cada 14.5 segundos = ~4 min 10 seg
                 spawnSequence();
                 const masterInterval = setInterval(() => {
                     if (fraseIndex < phrases.length) {
