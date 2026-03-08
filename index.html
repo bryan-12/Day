@@ -1,147 +1,274 @@
-<style>
-    /* ... (Tus estilos de sky, stars, ground y garden se mantienen igual) ... */
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Day</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Poppins', sans-serif; background-color: #0b1a2e; touch-action: manipulation; }
+        
+        /* Pantalla de Inicio */
+        #start-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #0b1a2e; display: flex; justify-content: center; align-items: center; z-index: 999; transition: opacity 2s ease; cursor: pointer; padding: 20px; }
+        #start-btn { background: linear-gradient(45deg, #d35400, #f39c12); color: white; border: none; padding: 30px; font-size: clamp(0.9rem, 4.5vw, 1.2rem); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); text-align: center; width: 90%; max-width: 450px; line-height: 1.6; }
 
-    /* Contenedor del bloque: Frase - Foto - Frase */
-    .sequence-item {
-        position: absolute;
-        bottom: -20vh; /* Empieza fuera por debajo */
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        max-width: 400px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 50;
-        pointer-events: none;
-        opacity: 0;
-        /* La animación dura 14 segundos para que suba lento y elegante */
-        animation: floatUpAndFade 14s linear forwards;
-    }
+        /* Elementos del Paisaje */
+        #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
+        #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 8s ease; }
+        #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 18vh; background: linear-gradient(to top, #0f2b10, #1b4d1d); z-index: 10; }
+        #garden { position: absolute; bottom: 10vh; left: 0; width: 100%; height: 65vh; z-index: 15; pointer-events: none; }
+        
+        /* Flores */
+        .flower { position: absolute; bottom: 0; transform-origin: bottom center; animation: growAndFade 28s ease-in-out forwards, sway 5s ease-in-out infinite alternate; }
+        @keyframes growAndFade { 0% { transform: scale(0); opacity: 0; } 10% { transform: scale(1); opacity: 1; } 90% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.5); opacity: 0; } }
+        @keyframes sway { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }
+        
+        .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 60; animation: fly 1s ease-out forwards; }
+        @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
 
-    @keyframes floatUpAndFade {
-        0% { transform: translate(-50%, 0); opacity: 0; }
-        10% { opacity: 1; }
-        85% { opacity: 1; }
-        100% { transform: translate(-50%, -100vh); opacity: 0; }
-    }
-
-    .phrase {
-        color: white;
-        font-family: 'Dancing Script', cursive;
-        font-size: clamp(1.4rem, 6vw, 2rem);
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-        text-align: center;
-        margin: 5px 0;
-    }
-
-    .photo-frame {
-        width: 190px;
-        height: 190px;
-        border-radius: 12px;
-        border: 4px solid white;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        object-fit: cover;
-        margin: 10px 0;
-    }
-</style>
-
-<script>
-    // Tus 17 fotos
-    const fotos = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg"];
-    
-    // Tus 34 frases exactas
-    let phrases = [
-        "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
-        "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
-        "Tu sonrisa es un regalo", "Eres alguien muy especial", "Mereces calma y paz", "Qué bien se siente verte feliz", 
-        "Eres una mujer excepcional", "Tu determinación es inspiradora", "Eres paz en el caos", "Nunca dudes de ti <3", 
-        "Eres absolutamente hermosa", "Te admiro profundamente", "Eres el pensamiento más bonito", "Contigo el tiempo se detiene", 
-        "Tu luz es única", "Eres capaz de todo", "Mereces lo mejor y lo mas lindo", "Eres una gran persona", 
-        "Admiro tu esencia", "Eres pura magia", "Tu bienestar importa mucho", "Eres auténtica", 
-        "Sigue brillando siempre", "Eres valiente", 
-        "Me gusta compartir momentos contigo", "Gracias por tu paciencia", "Te esperaré", "Gracias por todo"
-    ]; // Quitamos el random para que tú controles el orden si quieres, o déjalo si prefieres azar.
-
-    let fotoIndex = 0;
-
-    function spawnSequence() {
-        if (phrases.length < 2) {
-            // Mensaje Final al terminar las frases
-            setTimeout(() => {
-                const final = document.createElement('div');
-                final.className = 'sequence-item';
-                final.style.bottom = '40vh';
-                final.style.animation = "none";
-                final.style.opacity = "1";
-                final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.5rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
-                document.body.appendChild(final);
-            }, 5000);
-            return;
+        /* --- NUEVA ESTRUCTURA UNIFICADA --- */
+        
+        /* Contenedor del BLOQUE COMPLETO (Frase-Foto-Frase) que SUBE */
+        .sequence-item {
+            position: absolute;
+            bottom: -20vh; /* Empieza fuera por debajo */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0;
+            
+            /* Animación unificada de subida lenta y elegante */
+            animation: floatUpAndFade 14s linear forwards;
         }
 
-        const container = document.createElement('div');
-        container.className = 'sequence-item';
+        /* Animación que mueve TODO el contenedor */
+        @keyframes floatUpAndFade {
+            0% { transform: translate(-50%, 10vh); opacity: 0; }
+            10% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { transform: translate(-50%, -100vh); opacity: 0; }
+        }
 
-        // 1. Frase arriba
-        const p1 = document.createElement('div');
-        p1.className = 'phrase';
-        p1.innerText = phrases.shift(); // Toma la primera del arreglo
+        /* Estilo de las Frases */
+        .phrase {
+            color: white;
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.4rem, 6vw, 2rem);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            text-align: center;
+            margin: 5px 0; /* Margen pequeño para no separarlas mucho */
+            line-height: 1.2;
+        }
 
-        // 2. Foto al centro
-        const img = document.createElement('img');
-        img.className = 'photo-frame';
-        img.src = fotos[fotoIndex % fotos.length];
-        fotoIndex++;
+        /* Estilo de la Foto (SIN animaciones KenBurns) */
+        .photo-frame {
+            width: 190px;
+            height: 190px;
+            border-radius: 12px;
+            border: 4px solid white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            object-fit: cover;
+            margin: 10px 0; /* Espacio para que respire la foto */
+            display: block;
+        }
+    </style>
+</head>
+<body onclick="createSparkle(event)">
 
-        // 3. Frase abajo
-        const p2 = document.createElement('div');
-        p2.className = 'phrase';
-        p2.innerText = phrases.shift(); // Toma la siguiente
+    <audio id="musica">
+        <source src="Mi_universo.mp3" type="audio/mpeg">
+    </audio>
 
-        container.appendChild(p1);
-        container.appendChild(img);
-        container.appendChild(p2);
+    <div id="start-screen" onclick="startMagic()">
+        <div id="start-btn">
+            Feliz día, Day ❤️<br>
+            <span style="font-size: 0.8em; font-weight: 300; opacity: 0.9;">Recuerda que eres lo mejor de esta vida, cuenta conmigo</span><br>
+            <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7; letter-spacing: 2px;">(Toca la pantalla)</p>
+        </div>
+    </div>
 
-        document.body.appendChild(container);
+    <div id="sky"></div>
+    <div id="stars"></div>
+    <div id="garden"></div>
+    <div id="ground"></div>
 
-        // Borrar del código después de que suba para no saturar
-        setTimeout(() => container.remove(), 15000);
-    }
+    <script>
+        // Lista de tus 17 fotos (asegúrate de que todas sean .jpg en GitHub)
+        const fotos = [
+            "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg",
+            "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg",
+            "16.jpg", "17.jpg" 
+        ];
 
-    function startMagic() {
-        const audio = document.getElementById('musica');
-        audio.play();
-        document.getElementById('start-screen').style.opacity = '0';
+        // Lista de frases (34 exactas para 17 bloques)
+        let phrases = [
+            "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
+            "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
+            "Tu sonrisa es un regalo", "Eres alguien muy especial", "Mereces calma y paz", "Qué bien se siente verte feliz", 
+            "Eres una mujer excepcional", "Tu determinación es inspiradora", "Eres paz en el caos", "Nunca dudes de ti <3", 
+            "Eres absolutamente hermosa", "Te admiro profundamente", "Eres el pensamiento más bonito", "Contigo el tiempo se detiene", 
+            "Tu luz es única", "Eres capaz de todo", "Mereces lo mejor y lo mas lindo", "Eres una gran persona", 
+            "Admiro tu esencia", "Eres pura magia", "Tu bienestar importa mucho", "Eres auténtica", 
+            "Sigue brillando siempre", "Eres valiente", 
+            "Me gusta compartir momentos contigo", "Gracias por tu paciencia", "Te esperaré", "Gracias por todo"
+        ]; // Si quieres orden aleatorio, descomenta la siguiente línea:
+        // ].sort(() => Math.random() - 0.5);
+
+        // Variables de control
+        let fotoIndex = 0;
+        let fraseIndex = 0;
+
+        // SVGs de las flores
+        const sunflowerSVG = (size) => `
+            <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}" preserveAspectRatio="xMidYMid meet">
+                <path d="M50,250 Q45,160 50,100" stroke="#2d5a27" stroke-width="6" fill="none"/>
+                <g fill="#ffc107">
+                    ${Array.from({length:10}, (_,i)=>`<ellipse cx="50" cy="100" rx="7" ry="24" transform="rotate(${i*36} 50 100)" />`).join('')}
+                </g>
+                <circle cx="50" cy="100" r="16" fill="#4e342e"/>
+            </svg>
+        `;
         
-        setTimeout(() => {
-            document.getElementById('start-screen').remove();
-            
-            // Efectos visuales de fondo
-            setInterval(changeSky, 20000);
-            setInterval(spawnFlower, 700);
-            
-            // Crear estrellas
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 80; i++) {
+        const higanbanaSVG = (size) => `
+            <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}" preserveAspectRatio="xMidYMid meet">
+                <path d="M50,250 L50,130" stroke="#1b4d1d" stroke-width="3" fill="none"/>
+                <g stroke="#d32f2f" fill="none" stroke-width="2.5">
+                    ${Array.from({length:8}, (_,i)=>`<path d="M50,130 Q30,70 ${-10+i*15},120" transform="rotate(${i*45} 50 130)"/>`).join('')}
+                </g>
+                <circle cx="50" cy="130" r="4" fill="#b71c1c"/>
+            </svg>
+        `;
+
+        function createSparkle(e) {
+            for(let i=0; i<6; i++){
                 const s = document.createElement('div');
-                s.style.cssText = `position:absolute; width:1.5px; height:1.5px; background:white; left:${Math.random()*100}%; top:${Math.random()*65}%; border-radius:50%; box-shadow:0 0 4px #fff;`;
-                starsContainer.appendChild(s);
+                s.className = 'sparkle';
+                s.style.left = e.pageX + (Math.random()*24-12) + 'px';
+                s.style.top = e.pageY + (Math.random()*24-12) + 'px';
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 1000);
+            }
+        }
+
+        function changeSky() {
+            const sky = document.getElementById('sky');
+            const colors = ["#0b1a2e", "#16213e", "#1a1a2e", "#0b1a2e"];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            sky.style.background = randomColor;
+            document.getElementById('stars').style.opacity = "1";
+        }
+
+        function spawnFlower() {
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            const isSunflower = Math.random() > 0.45;
+            const size = (Math.random() * 40 + 45) * (isSunflower ? 1 : 0.7);
+            flower.style.left = (Math.random() * 92 + 4) + '%';
+            flower.style.zIndex = Math.floor(size); 
+            flower.innerHTML = isSunflower ? sunflowerSVG(size) : higanbanaSVG(size);
+            document.getElementById('garden').appendChild(flower);
+            setTimeout(() => flower.remove(), 28000);
+        }
+
+        // --- FUNCIÓN DE SECUENCIA CORREGIDA ---
+        function spawnSequence() {
+            // Si ya no quedan frases, detener
+            if (fraseIndex >= phrases.length) {
+                // Mensaje final (Opcional, sale 8 seg después del último bloque)
+                setTimeout(() => {
+                    if(!document.querySelector('.final-message')) { // Evitar duplicados
+                        const final = document.createElement('div');
+                        final.className = 'sequence-item final-message';
+                        final.style.bottom = '40vh'; // Más centrado
+                        final.style.animation = "none"; // Sin subida
+                        final.style.opacity = "1";
+                        final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.5rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
+                        document.body.appendChild(final);
+                    }
+                }, 10000);
+                return;
             }
 
-            // LANZAR SECUENCIAS
-            spawnSequence(); // La primera sale de inmediato
-            
-            // Cada 14.5 segundos sale un grupo nuevo (Frase-Foto-Frase)
-            // 17 grupos * 14.5 seg = 246.5 segundos (Casi los 4:10 min exactos)
-            const masterInterval = setInterval(() => {
-                if (phrases.length > 0) {
-                    spawnSequence();
-                } else {
-                    clearInterval(masterInterval);
-                }
-            }, 14500); 
+            // Crear el Contenedor Maestro (El que sube)
+            const container = document.createElement('div');
+            container.className = 'sequence-item';
 
-        }, 2000);
-    }
-</script>
+            // 1. Primera Frase (Arriba)
+            const p1 = document.createElement('div');
+            p1.className = 'phrase';
+            p1.innerText = phrases[fraseIndex];
+            fraseIndex++;
+
+            // 2. Foto (Centro)
+            const img = document.createElement('img');
+            img.className = 'photo-frame';
+            // Usar index de foto y reiniciar si llega al final (aunque hay 17 exactas)
+            img.src = fotos[fotoIndex % fotos.length];
+            fotoIndex++;
+
+            // 3. Segunda Frase (Abajo)
+            const p2 = document.createElement('div');
+            p2.className = 'phrase';
+            p2.innerText = phrases[fraseIndex];
+            fraseIndex++;
+
+            // Armar el bloque: Texto -> Foto -> Texto
+            container.appendChild(p1);
+            container.appendChild(img);
+            container.appendChild(p2);
+
+            // Añadir al body
+            document.body.appendChild(container);
+
+            // Eliminar del DOM después de que suba (14s animación + margen)
+            setTimeout(() => container.remove(), 15000);
+        }
+
+        function startMagic() {
+            const audio = document.getElementById('musica');
+            audio.play();
+            document.getElementById('start-screen').style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('start-screen').remove();
+                
+                // Efectos de fondo
+                setInterval(changeSky, 20000);
+                setInterval(spawnFlower, 700);
+                
+                // Estrellas de fondo
+                const starsContainer = document.getElementById('stars');
+                for (let i = 0; i < 80; i++) {
+                    const s = document.createElement('div');
+                    s.style.cssText = `position:absolute; width:1.5px; height:1.5px; background:white; left:${Math.random()*100}%; top:${Math.random()*65}%; border-radius:50%; box-shadow:0 0 4px #fff;`;
+                    starsContainer.appendChild(s);
+                }
+
+                // --- INICIAR SECUENCIAS SINCRONIZADAS ---
+                // Primera secuencia sale de inmediato
+                spawnSequence();
+                
+                // Crear un bloque cada 14.5 segundos. 
+                // Explicación: 250 seg canción / 17 bloques = 14.7 seg por bloque.
+                // Usamos 14.5 seg (14500ms) para un pequeño margen al final.
+                const masterInterval = setInterval(() => {
+                    if (fraseIndex < phrases.length) {
+                        spawnSequence();
+                    } else {
+                        clearInterval(masterInterval); // Detener timer cuando se acaben las frases
+                    }
+                }, 14500); 
+
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
