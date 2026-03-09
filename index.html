@@ -45,7 +45,7 @@
         .star { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 6px #fff; animation: twinkle var(--d) infinite ease-in-out; }
         
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 22vh; background: linear-gradient(to bottom, transparent 0%, #132d14 20%, #0a1a0b 100%); z-index: 10; }
-        #garden { position: absolute; bottom: 8vh; left: 0; width: 100%; height: 75vh; z-index: 15; }
+        #garden { position: absolute; bottom: 8vh; left: 0; width: 100%; height: 75vh; z-index: 15; pointer-events: none; }
         
         .flower { position: absolute; bottom: 0; transform-origin: bottom center; animation: growAndFade 28s ease-in-out forwards; }
         @keyframes growAndFade { 0% { transform: scale(0); opacity: 0; } 10% { transform: scale(1); opacity: 1; } 90% { opacity: 1; } 100% { transform: scale(0.5); opacity: 0; } }
@@ -74,12 +74,14 @@
 
         .photo-frame { width: 170px; height: 170px; border-radius: 20px; border: 5px solid white; object-fit: contain; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
 
-        /* CONTENEDOR FINAL REFORZADO */
         .final-message-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center;
             z-index: 500; pointer-events: none; padding: 20px;
         }
+
+        .sparkle { position: absolute; width: 6px; height: 6px; background: #fff59d; border-radius: 50%; pointer-events: none; z-index: 1000; animation: fly 0.8s ease-out forwards; box-shadow: 0 0 10px #ffeb3b; }
+        @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
     </style>
 </head>
 <body onclick="createSparkle(event)">
@@ -95,7 +97,7 @@
             <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7;">(Toca para comenzar)</p>
         </div>
         <div class="hint-text">
-            Vuelve cuando quieras, podría haber nuevas fotos y mensajes para ti. ✨
+            Vuelve cuando quieras, podría haber nuevos mensajes para ti. ✨
         </div>
         <div id="loader-text">
             <span style="font-size: 2.2rem;">Preparando sorpresa... ✨</span>
@@ -148,9 +150,14 @@
             return arr;
         }
 
+        const sunflowerSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><path d="M50,250 Q40,160 50,100" stroke="#1b4d1d" stroke-width="5" fill="none"/><g transform="translate(50,100)">${Array.from({length:12}, (_,i)=>`<ellipse cx="0" cy="-25" rx="8" ry="28" fill="#fbc02d" transform="rotate(${i*30})"/>`).join('')}<circle cx="0" cy="0" r="15" fill="#3e2723"/></g></svg>`;
+        
+        const higanbanaSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><path d="M50,250 L50,130" stroke="#132d14" stroke-width="2" fill="none"/><g transform="translate(50,130)">${Array.from({length:8}, (_,i)=>`<path d="M0,0 Q-20,-40 -40,-10" stroke="#d32f2f" stroke-width="1.5" fill="none" transform="rotate(${i*45})"/>`).join('')}<circle cx="0" cy="0" r="4" fill="#880e4f"/></g></svg>`;
+
         function createSparkle(e) {
             const x = e.clientX || (e.touches && e.touches[0].clientX);
             const y = e.clientY || (e.touches && e.touches[0].clientY);
+            if(x === undefined) return;
             for(let i=0; i<5; i++){
                 const s = document.createElement('div');
                 s.className = 'sparkle';
@@ -164,7 +171,9 @@
             const flower = document.createElement('div');
             flower.className = 'flower';
             flower.style.left = (Math.random() * 90) + '%';
-            flower.innerHTML = `<svg viewBox="0 0 100 250" width="50" height="125"><path d="M50,250 Q40,160 50,100" stroke="#1b4d1d" stroke-width="5" fill="none"/><g transform="translate(50,100)">${Array.from({length:12}, (_,i)=>`<ellipse cx="0" cy="-25" rx="8" ry="28" fill="#fbc02d" transform="rotate(${i*30})"/>`).join('')}<circle cx="0" cy="0" r="15" fill="#3e2723"/></g></svg>`;
+            const size = Math.random() * 30 + 40;
+            // ALTERNANCIA DE FLORES CORREGIDA
+            flower.innerHTML = Math.random() > 0.5 ? sunflowerSVG(size) : higanbanaSVG(size);
             document.getElementById('garden').appendChild(flower);
             setTimeout(() => flower.remove(), 28000);
         }
@@ -202,7 +211,8 @@
         }
 
         function startMagic() {
-            document.getElementById('musica').play().catch(() => {});
+            const audio = document.getElementById('musica');
+            audio.play().catch(() => {});
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('start-screen').remove();
