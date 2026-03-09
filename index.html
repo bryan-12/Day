@@ -97,7 +97,7 @@
             <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7;">(Toca para comenzar)</p>
         </div>
         <div class="hint-text">
-            Vuelve cuando quieras, podría haber nuevos mensajes para ti. ✨
+            Vuelve cuando quieras, podría haber nuevas fotos y mensajes para ti. ✨
         </div>
         <div id="loader-text">
             <span style="font-size: 2.2rem;">Preparando sorpresa... ✨</span>
@@ -172,7 +172,6 @@
             flower.className = 'flower';
             flower.style.left = (Math.random() * 90) + '%';
             const size = Math.random() * 30 + 40;
-            // ALTERNANCIA DE FLORES CORREGIDA
             flower.innerHTML = Math.random() > 0.5 ? sunflowerSVG(size) : higanbanaSVG(size);
             document.getElementById('garden').appendChild(flower);
             setTimeout(() => flower.remove(), 28000);
