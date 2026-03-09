@@ -29,102 +29,41 @@
         }
 
         #loader-text {
-            display: none; 
-            color: white;
-            font-family: 'Dancing Script', cursive;
-            text-align: center;
-            text-shadow: 0 0 15px rgba(255,255,255,0.5);
+            display: none; color: white; font-family: 'Dancing Script', cursive;
+            text-align: center; text-shadow: 0 0 15px rgba(255,255,255,0.5);
             animation: pulse 2s infinite ease-in-out;
         }
 
-        .internet-joke {
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
-            display: block;
-            margin-top: 10px;
-            opacity: 0.7;
-            font-weight: 300;
-        }
+        .internet-joke { font-family: 'Poppins', sans-serif; font-size: 0.9rem; display: block; margin-top: 10px; opacity: 0.7; font-weight: 300; }
 
         @keyframes pulse {
             0%, 100% { opacity: 0.4; transform: scale(0.95); }
             50% { opacity: 1; transform: scale(1.02); }
         }
 
-        /* PAISAJE REALISTA */
-        #sky { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; 
-            background: radial-gradient(circle at center, #1a2a44 0%, #050b16 100%);
-        }
-        
+        /* Paisaje Realista */
+        #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: radial-gradient(circle at center, #1a2a44 0%, #050b16 100%); }
         #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 5s ease; pointer-events: none; }
-        
-        .star {
-            position: absolute; background: white; border-radius: 50%;
-            box-shadow: 0 0 6px #fff; animation: twinkle var(--d) infinite ease-in-out;
-        }
+        .star { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 6px #fff; animation: twinkle var(--d) infinite ease-in-out; }
         @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
-
-        /* Suelo con profundidad */
-        #ground { 
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 22vh; 
-            background: linear-gradient(to bottom, rgba(15, 43, 16, 0) 0%, #132d14 20%, #0a1a0b 100%); 
-            z-index: 10; 
-        }
-
+        #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 22vh; background: linear-gradient(to bottom, rgba(15, 43, 16, 0) 0%, #132d14 20%, #0a1a0b 100%); z-index: 10; }
         #garden { position: absolute; bottom: 8vh; left: 0; width: 100%; height: 75vh; z-index: 15; pointer-events: none; }
         
-        /* Animación de flores */
-        .flower { 
-            position: absolute; bottom: 0; transform-origin: bottom center; 
-            animation: growAndFade 28s ease-in-out forwards, sway 6s ease-in-out infinite alternate; 
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-        }
-
-        @keyframes growAndFade { 
-            0% { transform: scale(0) translateY(20px); opacity: 0; } 
-            10% { transform: scale(1) translateY(0); opacity: 1; } 
-            90% { transform: scale(1); opacity: 1; } 
-            100% { transform: scale(0.5) translateY(10px); opacity: 0; } 
-        }
-
-        @keyframes sway { 
-            0% { transform: rotate(-2deg) skewX(1deg); } 
-            100% { transform: rotate(2deg) skewX(-1deg); } 
-        }
+        .flower { position: absolute; bottom: 0; transform-origin: bottom center; animation: growAndFade 28s ease-in-out forwards, sway 6s ease-in-out infinite alternate; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); }
+        @keyframes growAndFade { 0% { transform: scale(0) translateY(20px); opacity: 0; } 10% { transform: scale(1) translateY(0); opacity: 1; } 90% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.5) translateY(10px); opacity: 0; } }
+        @keyframes sway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
         
-        /* Destellos táctiles */
         .sparkle { position: absolute; width: 6px; height: 6px; background: #fff59d; border-radius: 50%; pointer-events: none; z-index: 1000; animation: fly 0.8s ease-out forwards; box-shadow: 0 0 10px #ffeb3b; }
         @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
 
-        /* Secuencia de Contenido */
-        .sequence-item {
-            position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; display: flex; flex-direction: column; align-items: center;
-            z-index: 100; pointer-events: none; opacity: 0; animation: floatingFade 12s ease-in-out forwards;
-        }
-
-        @keyframes floatingFade {
-            0% { opacity: 0; transform: translate(-50%, -40%); } 
-            15% { opacity: 1; transform: translate(-50%, -45%); }
-            85% { opacity: 1; transform: translate(-50%, -45%); }
-            100% { opacity: 0; transform: translate(-50%, -50%); }
-        }
-
-        .phrase {
-            color: white; font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.3rem, 6.5vw, 1.9rem); text-shadow: 0 2px 15px rgba(0,0,0,0.9);
-            text-align: center; margin: 8px 0; width: 100%;
-        }
-
-        .photo-frame {
-            width: 160px; height: 160px; border-radius: 20px; border: 5px solid white;
-            background-color: rgba(255, 255, 255, 0.15); object-fit: contain; 
-            margin: 15px 0; box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-        }
+        /* Contenido de la Secuencia */
+        .sequence-item { position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); width: 90%; display: flex; flex-direction: column; align-items: center; z-index: 100; pointer-events: none; opacity: 0; animation: floatingFade 12s ease-in-out forwards; }
+        @keyframes floatingFade { 0% { opacity: 0; transform: translate(-50%, -40%); } 15% { opacity: 1; transform: translate(-50%, -45%); } 85% { opacity: 1; transform: translate(-50%, -45%); } 100% { opacity: 0; transform: translate(-50%, -50%); } }
+        .phrase { color: white; font-family: 'Dancing Script', cursive; font-size: clamp(1.3rem, 6.5vw, 1.9rem); text-shadow: 0 2px 15px rgba(0,0,0,0.9); text-align: center; margin: 8px 0; width: 100%; }
+        .photo-frame { width: 160px; height: 160px; border-radius: 20px; border: 5px solid white; background-color: rgba(255, 255, 255, 0.15); object-fit: contain; margin: 15px 0; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
     </style>
 </head>
-<body onclick="createSparkle(event)" ontouchstart="createSparkle(event)">
+<body onclick="createSparkle(event)">
 
     <audio id="musica">
         <source src="Mi_universo.mp3" type="audio/mpeg">
@@ -148,68 +87,55 @@
     <div id="ground"></div>
 
     <script>
-        const fotos = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg"];
+        /* --- CONFIGURACIÓN AUTOMÁTICA --- */
+        const CANTIDAD_TOTAL_FOTOS = 39; // <--- Cambiado a 39 fotos
+        const EXTENSION = ".jpg";        
+
+        const TODAS_LAS_FOTOS = Array.from({length: CANTIDAD_TOTAL_FOTOS}, (_, i) => `${i + 1}${EXTENSION}`);
         
-        let phrases = [
+        const TODAS_LAS_FRASES = [
             "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
             "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
             "Tu sonrisa es un regalo", "Eres alguien muy especial", "Mereces calma y paz", "Qué bien se siente verte feliz", 
             "Eres una mujer excepcional", "Tu determinación es inspiradora", "Eres paz en el caos", "Nunca dudes de ti <3", 
             "Eres absolutamente hermosa", "Te admiro profundamente", "Eres el pensamiento más bonito", "Contigo la vida es mejor", 
-            "Tu luz es única", "Eres capaz de todo", "Mereces lo mejor y lo mas lindo", "Eres una gran persona", 
+            "Tu luz es única", "Eres capaz de todo", "Mereces lo mejor y lo más lindo", "Eres una gran persona", 
             "Admiro tu esencia", "Eres pura magia", "Tu bienestar importa mucho", "Eres auténtica", 
-            "Sigue brillando siempre", "Eres valiente", 
-            "Me gusta compartir momentos contigo", "Gracias por tu paciencia", "Espero tu regreso", "Gracias por todo"
+            "Sigue brillando siempre", "Eres valiente", "Me gusta compartir momentos contigo", "Gracias por tu paciencia", 
+            "Espero tu regreso", "Gracias por todo", "No te vi, pero estás hermosa", "Eres más fuerte de lo que crees", 
+            "Tu forma de ser es hermosa", "Haces del mundo un lugar mejor", "Tu corazón vale oro", "Eres una persona maravillosa", 
+            "Tu esencia es especial", "Tienes algo muy especial", "Tu presencia da calma", "Tu sonrisa tiene magia", 
+            "Eres un regalo para este mundo", "Hay algo muy bonito en ti", "Me alegra que existas", "Haces los días más bonitos", 
+            "Eres un pedacito de paz", "Tu mirada transmite paz", "Tu forma de ser es un tesoro", "El mundo es mejor porque existes", 
+            "Hay una paz muy bonita en tu forma de ser", "Iluminas incluso los días grises", "La vida es más bonita porque estás tú", 
+            "Me gusta escucharte", "Me encanta la energía que tienes", "Me gusta compartir tiempo contigo", 
+            "Me parece hermosa tu manera de ser", "Me alegra muchísimo haberte conocido", "Me gusta hablar contigo", 
+            "Me gusta que seas tú misma", "Eres y significas mucho <3", "Eres linda", "Eres preciosa", "Eres hermosa", 
+            "Eres bella"
         ];
 
+        let fotosSeleccionadas = [];
+        let frasesSeleccionadas = [];
         let fotoIndex = 0;
         let fraseIndex = 0;
         let masterInterval;
 
         function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
+            return arr;
         }
 
-        // SVG DE GIRASOL REALISTA
-        const sunflowerSVG = (size) => `
-        <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}">
-            <defs>
-                <linearGradient id="stemGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#1b4d1d" />
-                    <stop offset="100%" style="stop-color:#2d5a27" />
-                </linearGradient>
-            </defs>
-            <path d="M50,250 Q40,160 50,100" stroke="url(#stemGrad)" stroke-width="5" fill="none"/>
-            <g transform="translate(50,100)">
-                ${Array.from({length:12}, (_,i)=>`
-                    <ellipse cx="0" cy="-25" rx="8" ry="28" fill="#fbc02d" transform="rotate(${i*30})" />
-                    <ellipse cx="0" cy="-20" rx="5" ry="22" fill="#ffeb3b" transform="rotate(${i*30})" />
-                `).join('')}
-                <circle cx="0" cy="0" r="15" fill="#3e2723"/>
-                <circle cx="0" cy="0" r="10" fill="#5d4037" opacity="0.5"/>
-            </g>
-        </svg>`;
-
-        // SVG DE HIGANBANA REALISTA
-        const higanbanaSVG = (size) => `
-        <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}">
-            <path d="M50,250 L50,130" stroke="#132d14" stroke-width="2" fill="none"/>
-            <g transform="translate(50,130)">
-                ${Array.from({length:8}, (_,i)=>`
-                    <path d="M0,0 Q-20,-40 -40,-10" stroke="#d32f2f" stroke-width="1.5" fill="none" transform="rotate(${i*45})"/>
-                    <circle cx="-40" cy="-10" r="1" fill="#ff1744" transform="rotate(${i*45})"/>
-                `).join('')}
-                <circle cx="0" cy="0" r="4" fill="#880e4f"/>
-            </g>
-        </svg>`;
+        const sunflowerSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><defs><linearGradient id="sGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#1b4d1d"/><stop offset="100%" style="stop-color:#2d5a27"/></linearGradient></defs><path d="M50,250 Q40,160 50,100" stroke="url(#sGrad)" stroke-width="5" fill="none"/><g transform="translate(50,100)">${Array.from({length:12}, (_,i)=>`<ellipse cx="0" cy="-25" rx="8" ry="28" fill="#fbc02d" transform="rotate(${i*30})"/><ellipse cx="0" cy="-20" rx="5" ry="22" fill="#ffeb3b" transform="rotate(${i*30})"/>`).join('')}<circle cx="0" cy="0" r="15" fill="#3e2723"/></g></svg>`;
+        const higanbanaSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><path d="M50,250 L50,130" stroke="#132d14" stroke-width="2" fill="none"/><g transform="translate(50,130)">${Array.from({length:8}, (_,i)=>`<path d="M0,0 Q-20,-40 -40,-10" stroke="#d32f2f" stroke-width="1.5" fill="none" transform="rotate(${i*45})"/><circle cx="-40" cy="-10" r="1" fill="#ff1744" transform="rotate(${i*45})"/>`).join('')}<circle cx="0" cy="0" r="4" fill="#880e4f"/></g></svg>`;
 
         function createSparkle(e) {
             const x = e.clientX || (e.touches && e.touches[0].clientX);
             const y = e.clientY || (e.touches && e.touches[0].clientY);
-            if(x === undefined || y === undefined) return;
+            if(x === undefined) return;
             for(let i=0; i<6; i++){
                 const s = document.createElement('div');
                 s.className = 'sparkle';
@@ -223,17 +149,15 @@
         function spawnFlower() {
             const flower = document.createElement('div');
             flower.className = 'flower';
-            const isSunflower = Math.random() > 0.4;
             const size = Math.random() * 40 + 50;
             flower.style.left = (Math.random() * 92 + 4) + '%';
-            flower.style.zIndex = Math.floor(Math.random() * 20); 
-            flower.innerHTML = isSunflower ? sunflowerSVG(size) : higanbanaSVG(size * 0.9);
+            flower.innerHTML = Math.random() > 0.4 ? sunflowerSVG(size) : higanbanaSVG(size * 0.9);
             document.getElementById('garden').appendChild(flower);
             setTimeout(() => flower.remove(), 28000);
         }
 
         function spawnSequence() {
-            if (fotoIndex >= fotos.length) {
+            if (fotoIndex >= fotosSeleccionadas.length) {
                 clearInterval(masterInterval);
                 setTimeout(() => {
                     const final = document.createElement('div');
@@ -248,9 +172,9 @@
             const container = document.createElement('div');
             container.className = 'sequence-item';
             container.innerHTML = `
-                <div class="phrase">${phrases[fraseIndex++]}</div>
-                <img src="${fotos[fotoIndex++]}" class="photo-frame" alt="Foto">
-                <div class="phrase">${phrases[fraseIndex++]}</div>
+                <div class="phrase">${frasesSeleccionadas[fraseIndex++]}</div>
+                <img src="${fotosSeleccionadas[fotoIndex++]}" class="photo-frame" alt="Foto">
+                <div class="phrase">${frasesSeleccionadas[fraseIndex++]}</div>
             `;
             document.body.appendChild(container);
             setTimeout(() => { if(container.parentNode) container.remove(); }, 12500);
@@ -259,30 +183,29 @@
         function preLoad() {
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('loader-text').style.display = 'block';
-            shuffle(fotos);
-            shuffle(phrases);
+            
+            // Selección aleatoria de 17 fotos y 34 frases de entre todo el mazo
+            fotosSeleccionadas = shuffle(TODAS_LAS_FOTOS).slice(0, 17);
+            frasesSeleccionadas = shuffle(TODAS_LAS_FRASES).slice(0, 34);
+
             const randomTime = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
             setTimeout(startMagic, randomTime);
         }
 
         function startMagic() {
             const audio = document.getElementById('musica');
-            audio.play().catch(e => console.log("Audio play blocked"));
+            audio.play().catch(() => {});
             document.getElementById('start-screen').style.opacity = '0';
-            
             setTimeout(() => {
-                const screen = document.getElementById('start-screen');
-                if(screen) screen.remove();
-                
+                document.getElementById('start-screen').remove();
                 setInterval(spawnFlower, 700);
-                const starsContainer = document.getElementById('stars');
-                starsContainer.style.opacity = "1";
+                document.getElementById('stars').style.opacity = "1";
                 for (let i = 0; i < 90; i++) {
                     const s = document.createElement('div');
                     s.className = 'star';
                     const size = Math.random() * 2 + 0.5;
                     s.style.cssText = `width:${size}px; height:${size}px; left:${Math.random()*100}%; top:${Math.random()*65}%; --d:${Math.random()*4+2}s;`;
-                    starsContainer.appendChild(s);
+                    document.getElementById('stars').appendChild(s);
                 }
                 spawnSequence();
                 masterInterval = setInterval(spawnSequence, 13800); 
