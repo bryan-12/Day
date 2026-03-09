@@ -13,7 +13,6 @@
             background-color: #0b1a2e; touch-action: manipulation; 
         }
         
-        /* Pantalla de Inicio */
         #start-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #0b1a2e; display: flex; justify-content: center; 
@@ -27,7 +26,6 @@
             text-align: center; width: 90%; max-width: 400px; line-height: 1.5; 
         }
 
-        /* Paisaje */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
         #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 8s ease; }
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 18vh; background: linear-gradient(to top, #0f2b10, #1b4d1d); z-index: 10; }
@@ -40,10 +38,9 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 60; animation: fly 1s ease-out forwards; }
         @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
 
-        /* --- BLOQUE CENTRAL COMPACTO Y ALTO --- */
         .sequence-item {
             position: absolute;
-            top: 38%; /* Ubicado más arriba para no chocar con flores */
+            top: 38%; 
             left: 50%;
             transform: translate(-50%, -50%);
             width: 95%;
@@ -55,7 +52,7 @@
             z-index: 100;
             pointer-events: none;
             opacity: 0;
-            animation: floatingFade 12.5s ease-in-out forwards;
+            animation: floatingFade 12s ease-in-out forwards;
         }
 
         @keyframes floatingFade {
@@ -77,7 +74,7 @@
         }
 
         .photo-frame {
-            width: 150px; /* Tamaño reducido para móviles */
+            width: 150px; 
             height: 150px;
             border-radius: 12px;
             border: 3px solid white;
@@ -109,12 +106,8 @@
     <div id="ground"></div>
 
     <script>
-        const fotos = [
-            "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg",
-            "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg",
-            "16.jpg", "17.jpg" 
-        ];
-
+        const fotos = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg"];
+        
         let phrases = [
             "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
             "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
@@ -129,26 +122,17 @@
 
         let fotoIndex = 0;
         let fraseIndex = 0;
+        let masterInterval;
 
-        const sunflowerSVG = (size) => `
-            <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}" preserveAspectRatio="xMidYMid meet">
-                <path d="M50,250 Q45,160 50,100" stroke="#2d5a27" stroke-width="6" fill="none"/>
-                <g fill="#ffc107">
-                    ${Array.from({length:10}, (_,i)=>`<ellipse cx="50" cy="100" rx="7" ry="24" transform="rotate(${i*36} 50 100)" />`).join('')}
-                </g>
-                <circle cx="50" cy="100" r="16" fill="#4e342e"/>
-            </svg>
-        `;
-        
-        const higanbanaSVG = (size) => `
-            <svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}" preserveAspectRatio="xMidYMid meet">
-                <path d="M50,250 L50,130" stroke="#1b4d1d" stroke-width="3" fill="none"/>
-                <g stroke="#d32f2f" fill="none" stroke-width="2.5">
-                    ${Array.from({length:8}, (_,i)=>`<path d="M50,130 Q30,70 ${-10+i*15},120" transform="rotate(${i*45} 50 130)"/>`).join('')}
-                </g>
-                <circle cx="50" cy="130" r="4" fill="#b71c1c"/>
-            </svg>
-        `;
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        const sunflowerSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><path d="M50,250 Q45,160 50,100" stroke="#2d5a27" stroke-width="6" fill="none"/><g fill="#ffc107">${Array.from({length:10}, (_,i)=>`<ellipse cx="50" cy="100" rx="7" ry="24" transform="rotate(${i*36} 50 100)" />`).join('')}</g><circle cx="50" cy="100" r="16" fill="#4e342e"/></svg>`;
+        const higanbanaSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><path d="M50,250 L50,130" stroke="#1b4d1d" stroke-width="3" fill="none"/><g stroke="#d32f2f" fill="none" stroke-width="2.5">${Array.from({length:8}, (_,i)=>`<path d="M50,130 Q30,70 ${-10+i*15},120" transform="rotate(${i*45} 50 130)"/>`).join('')}</g><circle cx="50" cy="130" r="4" fill="#b71c1c"/></svg>`;
 
         function createSparkle(e) {
             for(let i=0; i<6; i++){
@@ -163,9 +147,7 @@
 
         function changeSky() {
             const sky = document.getElementById('sky');
-            const colors = ["#0b1a2e", "#16213e", "#1a1a2e", "#0b1a2e"];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            sky.style.background = randomColor;
+            sky.style.background = ["#0b1a2e", "#16213e", "#1a1a2e"][Math.floor(Math.random()*3)];
             document.getElementById('stars').style.opacity = "1";
         }
 
@@ -175,31 +157,31 @@
             const isSunflower = Math.random() > 0.45;
             const size = (Math.random() * 35 + 40) * (isSunflower ? 1 : 0.75);
             flower.style.left = (Math.random() * 92 + 4) + '%';
-            flower.style.zIndex = Math.floor(size); 
             flower.innerHTML = isSunflower ? sunflowerSVG(size) : higanbanaSVG(size);
             document.getElementById('garden').appendChild(flower);
             setTimeout(() => flower.remove(), 28000);
         }
 
         function spawnSequence() {
-            if (fraseIndex >= phrases.length) {
-                // Secuencia Final
+            // Si ya mostramos las 17 fotos, preparamos el final
+            if (fotoIndex >= fotos.length) {
+                clearInterval(masterInterval);
+                
+                // Tiempo de espera para que termine el Fade Out de la última foto antes del mensaje final
                 setTimeout(() => {
-                    if(!document.querySelector('.final-message')) {
-                        const final = document.createElement('div');
-                        final.className = 'sequence-item final-message';
-                        final.style.animation = "none";
-                        final.style.opacity = "1";
-                        final.style.top = "40%"; // Ubicación alta para el mensaje final
-                        final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.3rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
-                        document.body.appendChild(final);
-                        
-                        // Esperar 8 segundos para que lea el mensaje y luego recargar
-                        setTimeout(() => {
-                            location.reload(); 
-                        }, 8000);
-                    }
-                }, 8000);
+                    const final = document.createElement('div');
+                    final.className = 'sequence-item';
+                    final.style.animation = "none";
+                    final.style.opacity = "1";
+                    final.style.top = "40%"; 
+                    final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.3rem; font-weight:bold; animation: floatingFade 8s ease-in-out forwards;">Para Day, I miss you ❤️</div>`;
+                    document.body.appendChild(final);
+                    
+                    // RECARGA AUTOMÁTICA tras 8 segundos del mensaje final
+                    setTimeout(() => {
+                        location.reload(); 
+                    }, 8500);
+                }, 10000); 
                 return;
             }
 
@@ -212,8 +194,7 @@
 
             const img = document.createElement('img');
             img.className = 'photo-frame';
-            img.src = fotos[fotoIndex % fotos.length];
-            fotoIndex++;
+            img.src = fotos[fotoIndex++];
 
             const p2 = document.createElement('div');
             p2.className = 'phrase';
@@ -224,17 +205,19 @@
             container.appendChild(p2);
 
             document.body.appendChild(container);
-            setTimeout(() => container.remove(), 13000);
+            setTimeout(() => container.remove(), 12500);
         }
 
         function startMagic() {
+            shuffle(fotos);
+            shuffle(phrases);
+
             const audio = document.getElementById('musica');
             audio.play();
             document.getElementById('start-screen').style.opacity = '0';
             
             setTimeout(() => {
                 document.getElementById('start-screen').remove();
-                
                 setInterval(changeSky, 20000);
                 setInterval(spawnFlower, 750);
                 
@@ -246,14 +229,8 @@
                 }
 
                 spawnSequence();
-                const masterInterval = setInterval(() => {
-                    if (fraseIndex < phrases.length) {
-                        spawnSequence();
-                    } else {
-                        clearInterval(masterInterval);
-                    }
-                }, 14500); 
-
+                // 13.8 segundos x 17 fotos = aprox 235 segundos (4 minutos)
+                masterInterval = setInterval(spawnSequence, 13800); 
             }, 2000);
         }
     </script>
