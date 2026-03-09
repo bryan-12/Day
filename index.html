@@ -13,7 +13,6 @@
             background-color: #050b16; touch-action: manipulation; 
         }
         
-        /* Pantalla de Inicio */
         #start-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #050b16; display: flex; flex-direction: column;
@@ -26,64 +25,60 @@
             border: none; padding: 25px; font-size: clamp(0.9rem, 4.2vw, 1.1rem); 
             border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
             text-align: center; width: 90%; max-width: 400px; line-height: 1.5;
-            margin-bottom: 20px; z-index: 1000;
+            margin-bottom: 20px;
         }
 
         .hint-text {
             color: white; font-size: 0.75rem; opacity: 0.5; font-weight: 300;
             text-align: center; max-width: 280px; line-height: 1.4;
-            letter-spacing: 0.5px;
         }
 
         #loader-text {
             display: none; color: white; font-family: 'Caveat', cursive;
-            text-align: center; text-shadow: 0 0 10px rgba(255,255,255,0.3);
-            animation: pulse 2s infinite ease-in-out;
+            text-align: center; animation: pulse 2s infinite ease-in-out;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1.02); }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-        /* Paisaje y Estrellas */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: radial-gradient(circle at center, #1a2a44 0%, #050b16 100%); overflow: hidden; }
-        #stars { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 2; opacity: 0; transition: opacity 5s ease; pointer-events: none; }
+        #stars { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 2; opacity: 0; transition: opacity 5s ease; }
         .star { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 6px #fff; animation: twinkle var(--d) infinite ease-in-out; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
         
-        #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 22vh; background: linear-gradient(to bottom, rgba(15, 43, 16, 0) 0%, #132d14 20%, #0a1a0b 100%); z-index: 10; }
-        #garden { position: absolute; bottom: 8vh; left: 0; width: 100%; height: 75vh; z-index: 15; pointer-events: none; }
+        #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 22vh; background: linear-gradient(to bottom, transparent 0%, #132d14 20%, #0a1a0b 100%); z-index: 10; }
+        #garden { position: absolute; bottom: 8vh; left: 0; width: 100%; height: 75vh; z-index: 15; }
         
-        .flower { position: absolute; bottom: 0; transform-origin: bottom center; animation: growAndFade 28s ease-in-out forwards, sway 6s ease-in-out infinite alternate; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); }
-        @keyframes growAndFade { 0% { transform: scale(0) translateY(20px); opacity: 0; } 10% { transform: scale(1) translateY(0); opacity: 1; } 90% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.5) translateY(10px); opacity: 0; } }
-        @keyframes sway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
+        .flower { position: absolute; bottom: 0; transform-origin: bottom center; animation: growAndFade 28s ease-in-out forwards; }
+        @keyframes growAndFade { 0% { transform: scale(0); opacity: 0; } 10% { transform: scale(1); opacity: 1; } 90% { opacity: 1; } 100% { transform: scale(0.5); opacity: 0; } }
         
-        .sparkle { position: absolute; width: 6px; height: 6px; background: #fff59d; border-radius: 50%; pointer-events: none; z-index: 1000; animation: fly 0.8s ease-out forwards; box-shadow: 0 0 10px #ffeb3b; }
-        @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
-
-        /* Contenido de Fotos y Frases */
         .sequence-item { 
-            position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); 
-            width: 95%; display: flex; flex-direction: column; align-items: center; 
-            z-index: 100; pointer-events: none; opacity: 0; animation: floatingFade 12s ease-in-out forwards; 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; display: flex; flex-direction: column; align-items: center; 
+            z-index: 100; pointer-events: none; opacity: 0; 
+            animation: floatingFade 12s ease-in-out forwards; 
         }
-        @keyframes floatingFade { 0% { opacity: 0; transform: translate(-50%, -40%); } 15% { opacity: 1; transform: translate(-50%, -45%); } 85% { opacity: 1; transform: translate(-50%, -45%); } 100% { opacity: 0; transform: translate(-50%, -50%); } }
+
+        @keyframes floatingFade { 
+            0% { opacity: 0; transform: translate(-50%, -45%); } 
+            15% { opacity: 1; transform: translate(-50%, -50%); } 
+            85% { opacity: 1; transform: translate(-50%, -50%); } 
+            100% { opacity: 0; transform: translate(-50%, -55%); } 
+        }
         
         .phrase { 
             color: white; font-family: 'Caveat', cursive; 
-            font-size: clamp(1.6rem, 8vw, 2.2rem); 
-            text-shadow: 0 3px 10px rgba(0,0,0,0.8); 
-            text-align: center; margin: 5px 0; width: 100%; 
-            letter-spacing: 0.5px;
+            font-size: clamp(1.5rem, 7vw, 2.2rem); 
+            text-shadow: 0 3px 10px rgba(0,0,0,0.9); 
+            text-align: center; margin: 15px 0; width: 90%; 
+            line-height: 1.2;
         }
 
-        .photo-frame { width: 165px; height: 165px; border-radius: 20px; border: 5px solid white; background-color: rgba(255, 255, 255, 0.15); object-fit: contain; margin: 10px 0; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+        .photo-frame { width: 170px; height: 170px; border-radius: 20px; border: 5px solid white; object-fit: contain; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
 
-        /* Mensaje Final */
+        /* CONTENEDOR FINAL REFORZADO */
         .final-message-container {
-            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; text-align: center; z-index: 200; pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 500; pointer-events: none; padding: 20px;
         }
     </style>
 </head>
@@ -97,31 +92,23 @@
         <div id="start-btn" onclick="preLoad()">
             Feliz día, Day<br>
             <span style="font-size: 0.85em; font-weight: 300;">Eres lo mejor de esta vida, cuenta conmigo siempre</span><br>
-            <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7; letter-spacing: 1px;">(Toca para comenzar)</p>
+            <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7;">(Toca para comenzar)</p>
         </div>
-        
         <div class="hint-text">
             Vuelve cuando quieras, podría haber nuevas fotos y mensajes para ti. ✨
         </div>
-
         <div id="loader-text">
-            <span style="font-size: 2.2rem;">Preparando sorpresa... ✨</span><br>
-            <span style="font-family: 'Poppins'; font-size: 0.9rem; opacity: 0.7;">(dependerá de tu internet XD)</span>
+            <span style="font-size: 2.2rem;">Preparando sorpresa... ✨</span>
         </div>
     </div>
 
-    <div id="sky">
-        <div id="stars"></div>
-    </div>
+    <div id="sky"><div id="stars"></div></div>
     <div id="garden"></div>
     <div id="ground"></div>
 
     <script>
-        /* --- CONFIGURACIÓN --- */
         const CANTIDAD_TOTAL_FOTOS = 39; 
-        const EXTENSION = ".jpg";        
-
-        const TODAS_LAS_FOTOS = Array.from({length: CANTIDAD_TOTAL_FOTOS}, (_, i) => `${i + 1}${EXTENSION}`);
+        const TODAS_LAS_FOTOS = Array.from({length: CANTIDAD_TOTAL_FOTOS}, (_, i) => `${i + 1}.jpg`);
         
         const TODAS_LAS_FRASES = [
             "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
@@ -140,7 +127,10 @@
             "Hay una paz muy bonita en tu forma de ser", "Iluminas incluso los días grises", "La vida es más bonita porque estás tú", 
             "Me gusta escucharte", "Me encanta la energía que tienes", "Me gusta compartir tiempo contigo", 
             "Me parece hermosa tu manera de ser", "Me alegra muchísimo haberte conocido", "Me gusta hablar contigo", 
-            "Me gusta que seas tú misma", "Eres y significas mucho <3", "Eres linda", "Eres preciosa", "Eres hermosa", "Eres bella"
+            "Me gusta que seas tú misma", "Eres y significas mucho <3", "Eres linda", "Eres preciosa", "Eres hermosa", "Eres bella",
+            "No importa el mundo, solo importa que estés tú", "Tu existencia me da fuerzas", 
+            "Eres el tesoro más grande que he encontrado", "Gracias por existir", 
+            "Eres el glitch más hermoso en mi simulación", "Contigo, todo es mejor"
         ];
 
         let fotosSeleccionadas = [];
@@ -158,18 +148,13 @@
             return arr;
         }
 
-        const sunflowerSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><defs><linearGradient id="sGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#1b4d1d"/><stop offset="100%" style="stop-color:#2d5a27"/></linearGradient></defs><path d="M50,250 Q40,160 50,100" stroke="url(#sGrad)" stroke-width="5" fill="none"/><g transform="translate(50,100)">${Array.from({length:12}, (_,i)=>`<ellipse cx="0" cy="-25" rx="8" ry="28" fill="#fbc02d" transform="rotate(${i*30})"/><ellipse cx="0" cy="-20" rx="5" ry="22" fill="#ffeb3b" transform="rotate(${i*30})"/>`).join('')}<circle cx="0" cy="0" r="15" fill="#3e2723"/></g></svg>`;
-        const higanbanaSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><path d="M50,250 L50,130" stroke="#132d14" stroke-width="2" fill="none"/><g transform="translate(50,130)">${Array.from({length:8}, (_,i)=>`<path d="M0,0 Q-20,-40 -40,-10" stroke="#d32f2f" stroke-width="1.5" fill="none" transform="rotate(${i*45})"/><circle cx="-40" cy="-10" r="1" fill="#ff1744" transform="rotate(${i*45})"/>`).join('')}<circle cx="0" cy="0" r="4" fill="#880e4f"/></g></svg>`;
-
         function createSparkle(e) {
             const x = e.clientX || (e.touches && e.touches[0].clientX);
             const y = e.clientY || (e.touches && e.touches[0].clientY);
-            if(x === undefined) return;
-            for(let i=0; i<6; i++){
+            for(let i=0; i<5; i++){
                 const s = document.createElement('div');
                 s.className = 'sparkle';
-                s.style.left = (x + (Math.random()*40 - 20)) + 'px';
-                s.style.top = (y + (Math.random()*40 - 20)) + 'px';
+                s.style.left = x + 'px'; s.style.top = y + 'px';
                 document.body.appendChild(s);
                 setTimeout(() => s.remove(), 800);
             }
@@ -178,9 +163,8 @@
         function spawnFlower() {
             const flower = document.createElement('div');
             flower.className = 'flower';
-            const size = Math.random() * 40 + 50;
-            flower.style.left = (Math.random() * 92 + 4) + '%';
-            flower.innerHTML = Math.random() > 0.4 ? sunflowerSVG(size) : higanbanaSVG(size * 0.9);
+            flower.style.left = (Math.random() * 90) + '%';
+            flower.innerHTML = `<svg viewBox="0 0 100 250" width="50" height="125"><path d="M50,250 Q40,160 50,100" stroke="#1b4d1d" stroke-width="5" fill="none"/><g transform="translate(50,100)">${Array.from({length:12}, (_,i)=>`<ellipse cx="0" cy="-25" rx="8" ry="28" fill="#fbc02d" transform="rotate(${i*30})"/>`).join('')}<circle cx="0" cy="0" r="15" fill="#3e2723"/></g></svg>`;
             document.getElementById('garden').appendChild(flower);
             setTimeout(() => flower.remove(), 28000);
         }
@@ -191,62 +175,49 @@
                 setTimeout(() => {
                     const final = document.createElement('div');
                     final.className = 'final-message-container';
-                    final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: clamp(2.2rem, 10vw, 3rem); font-weight:bold; animation: floatingFade 8s forwards; opacity:1;">Para Day, I miss you ❤️</div>`;
+                    final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: clamp(2rem, 9vw, 3rem); font-weight:bold; animation: pulse 3s infinite ease-in-out; opacity:1;">Para Day, I miss you ❤️</div>`;
                     document.body.appendChild(final);
                     setTimeout(() => location.reload(), 9000);
-                }, 6000); 
+                }, 4000); 
                 return;
             }
             const container = document.createElement('div');
             container.className = 'sequence-item';
             container.innerHTML = `
                 <div class="phrase">${frasesSeleccionadas[fraseIndex++]}</div>
-                <img src="${fotosSeleccionadas[fotoIndex++]}" class="photo-frame" alt="Foto">
+                <img src="${fotosSeleccionadas[fotoIndex++]}" class="photo-frame">
                 <div class="phrase">${frasesSeleccionadas[fraseIndex++]}</div>
             `;
             document.body.appendChild(container);
-            setTimeout(() => { if(container.parentNode) container.remove(); }, 12500);
+            setTimeout(() => container.remove(), 12500);
         }
 
         function preLoad() {
             document.getElementById('start-btn').style.display = 'none';
-            document.querySelector('.hint-text').style.display = 'none'; 
+            document.querySelector('.hint-text').style.display = 'none';
             document.getElementById('loader-text').style.display = 'block';
-            
-            // Selección al azar de 17 fotos y 34 frases
             fotosSeleccionadas = shuffle(TODAS_LAS_FOTOS).slice(0, 17);
             frasesSeleccionadas = shuffle(TODAS_LAS_FRASES).slice(0, 34);
-
-            const randomTime = Math.floor(Math.random() * (4000 - 2000 + 1)) + 2000;
-            setTimeout(startMagic, randomTime);
+            setTimeout(startMagic, 3000);
         }
 
         function startMagic() {
-            const audio = document.getElementById('musica');
-            audio.play().catch(() => {});
+            document.getElementById('musica').play().catch(() => {});
             document.getElementById('start-screen').style.opacity = '0';
-            
             setTimeout(() => {
                 document.getElementById('start-screen').remove();
-                setInterval(spawnFlower, 700);
-                
-                // Efecto de estrellas dinámicas
+                setInterval(spawnFlower, 800);
                 const starLayer = document.getElementById('stars');
                 starLayer.style.opacity = "1";
-                for (let i = 0; i < 120; i++) {
+                for (let i = 0; i < 100; i++) {
                     const s = document.createElement('div');
                     s.className = 'star';
-                    const size = Math.random() * 2 + 0.5;
-                    s.style.cssText = `width:${size}px; height:${size}px; left:${Math.random()*100}%; top:${Math.random()*100}%; --d:${Math.random()*4+2}s;`;
+                    s.style.cssText = `width:2px; height:2px; left:${Math.random()*100}%; top:${Math.random()*100}%; --d:${Math.random()*4+2}s;`;
                     starLayer.appendChild(s);
                 }
-
-                // Parallax del cielo
                 setInterval(() => {
-                    const time = Date.now() * 0.00003;
-                    starLayer.style.transform = `rotate(${time}rad) scale(1.1)`;
+                    starLayer.style.transform = `rotate(${Date.now() * 0.00002}rad) scale(1.1)`;
                 }, 50);
-
                 spawnSequence();
                 masterInterval = setInterval(spawnSequence, 13800); 
             }, 1500);
