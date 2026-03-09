@@ -13,10 +13,11 @@
             background-color: #0b1a2e; touch-action: manipulation; 
         }
         
+        /* Pantalla de Inicio y Carga */
         #start-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #0b1a2e; display: flex; justify-content: center; 
-            align-items: center; z-index: 999; transition: opacity 2s ease; 
+            align-items: center; z-index: 999; transition: opacity 1.5s ease; 
             cursor: pointer; padding: 20px; 
         }
         #start-btn { 
@@ -26,6 +27,21 @@
             text-align: center; width: 90%; max-width: 400px; line-height: 1.5; 
         }
 
+        #loader-text {
+            display: none;
+            color: white;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* Paisaje */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
         #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 5s ease; pointer-events: none; }
         
@@ -51,6 +67,7 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 1000; animation: fly 0.8s ease-out forwards; }
         @keyframes fly { to { transform: translateY(-50px) scale(0); opacity: 0; } }
 
+        /* Contenido Central */
         .sequence-item {
             position: absolute;
             top: 38%; 
@@ -101,12 +118,13 @@
         <source src="Mi_universo.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="start-screen" onclick="startMagic()">
-        <div id="start-btn">
+    <div id="start-screen">
+        <div id="start-btn" onclick="preLoad()">
             Feliz día, Day ❤️<br>
             <span style="font-size: 0.85em; font-weight: 300;">Eres lo mejor de esta vida, cuenta conmigo siempre</span><br>
             <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7;">(Toca para comenzar)</p>
         </div>
+        <div id="loader-text">Preparando sorpresa... ✨</div>
     </div>
 
     <div id="sky"></div>
@@ -117,7 +135,6 @@
     <script>
         const fotos = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg"];
         
-        // LISTA ACTUALIZADA
         let phrases = [
             "Eres admirable", "Tu presencia lo cambia todo", "Eres valiosa, señorita", "Admiro tu fortaleza", 
             "Qué suerte es conocerte", "Eres suficiente y más", "Brillas con luz propia", "Eres increíble tal como eres", 
@@ -180,7 +197,6 @@
                     final.style.top = "40%"; 
                     final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.2rem; font-weight:bold; animation: floatingFade 8s forwards;">Para Day, I miss you ❤️</div>`;
                     document.body.appendChild(final);
-                    // Reinicio a los 9 segundos del mensaje final
                     setTimeout(() => location.reload(), 9000);
                 }, 8000); 
                 return;
@@ -197,9 +213,20 @@
             setTimeout(() => container.remove(), 12500);
         }
 
-        function startMagic() {
+        // --- NUEVA FUNCIÓN DE PRE-CARGA ---
+        function preLoad() {
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('loader-text').style.display = 'block';
+            
+            // Empezamos a mezclar en segundo plano
             shuffle(fotos);
             shuffle(phrases);
+
+            // Esperamos 5 segundos para la sorpresa
+            setTimeout(startMagic, 5000);
+        }
+
+        function startMagic() {
             document.getElementById('musica').play();
             document.getElementById('start-screen').style.opacity = '0';
             
@@ -219,7 +246,7 @@
 
                 spawnSequence();
                 masterInterval = setInterval(spawnSequence, 13800); 
-            }, 2000);
+            }, 1500);
         }
     </script>
 </body>
