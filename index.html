@@ -27,13 +27,12 @@
             text-align: center; width: 90%; max-width: 400px; line-height: 1.5; 
         }
 
-        /* Paisaje y Elementos Visuales */
+        /* Paisaje */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
         #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 8s ease; }
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 18vh; background: linear-gradient(to top, #0f2b10, #1b4d1d); z-index: 10; }
         #garden { position: absolute; bottom: 10vh; left: 0; width: 100%; height: 65vh; z-index: 15; pointer-events: none; }
         
-        /* Flores */
         .flower { position: absolute; bottom: 0; transform-origin: bottom center; animation: growAndFade 28s ease-in-out forwards, sway 5s ease-in-out infinite alternate; }
         @keyframes growAndFade { 0% { transform: scale(0); opacity: 0; } 10% { transform: scale(1); opacity: 1; } 90% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.5); opacity: 0; } }
         @keyframes sway { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }
@@ -41,10 +40,10 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 60; animation: fly 1s ease-out forwards; }
         @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
 
-        /* --- BLOQUE CENTRAL OPTIMIZADO PARA MÓVIL --- */
+        /* --- BLOQUE CENTRAL COMPACTO Y ALTO --- */
         .sequence-item {
             position: absolute;
-            top: 45%; 
+            top: 38%; /* Ubicado más arriba para no chocar con flores */
             left: 50%;
             transform: translate(-50%, -50%);
             width: 95%;
@@ -60,33 +59,33 @@
         }
 
         @keyframes floatingFade {
-            0% { opacity: 0; transform: translate(-50%, -48%); }
-            15% { opacity: 1; transform: translate(-50%, -50%); }
-            85% { opacity: 1; transform: translate(-50%, -50%); }
-            100% { opacity: 0; transform: translate(-50%, -52%); }
+            0% { opacity: 0; transform: translate(-50%, -43%); } 
+            15% { opacity: 1; transform: translate(-50%, -45%); }
+            85% { opacity: 1; transform: translate(-50%, -45%); }
+            100% { opacity: 0; transform: translate(-50%, -48%); }
         }
 
         .phrase {
             color: white;
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.3rem, 6.5vw, 1.9rem);
+            font-size: clamp(1.2rem, 6vw, 1.7rem); 
             text-shadow: 0 4px 12px rgba(0,0,0,1);
             text-align: center;
-            margin: 10px 0;
-            line-height: 1.2;
+            margin: 5px 0; 
+            line-height: 1.1;
             width: 100%;
         }
 
         .photo-frame {
-            width: 180px;         /* Tamaño reducido para mejor ajuste en móvil */
-            height: 180px;
-            border-radius: 15px;
-            border: 4px solid white;
-            background-color: rgba(255, 255, 255, 0.05); /* Fondo sutil */
-            object-fit: contain;  /* Muestra la foto completa sin recortar */
-            margin: 10px 0;
+            width: 150px; /* Tamaño reducido para móviles */
+            height: 150px;
+            border-radius: 12px;
+            border: 3px solid white;
+            background-color: rgba(255, 255, 255, 0.05);
+            object-fit: contain; 
+            margin: 8px 0;
             display: block;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
         }
     </style>
 </head>
@@ -184,15 +183,21 @@
 
         function spawnSequence() {
             if (fraseIndex >= phrases.length) {
+                // Secuencia Final
                 setTimeout(() => {
                     if(!document.querySelector('.final-message')) {
                         const final = document.createElement('div');
                         final.className = 'sequence-item final-message';
                         final.style.animation = "none";
                         final.style.opacity = "1";
-                        final.style.top = "50%";
+                        final.style.top = "40%"; // Ubicación alta para el mensaje final
                         final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.3rem; font-weight:bold;">Para Day, I miss you ❤️</div>`;
                         document.body.appendChild(final);
+                        
+                        // Esperar 8 segundos para que lea el mensaje y luego recargar
+                        setTimeout(() => {
+                            location.reload(); 
+                        }, 8000);
                     }
                 }, 8000);
                 return;
@@ -240,7 +245,6 @@
                     starsContainer.appendChild(s);
                 }
 
-                // Ciclo: 17 bloques cada 14.5 segundos = ~4 min 10 seg
                 spawnSequence();
                 const masterInterval = setInterval(() => {
                     if (fraseIndex < phrases.length) {
