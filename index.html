@@ -13,6 +13,7 @@
             background-color: #050b16; touch-action: manipulation; 
         }
         
+        /* Pantalla de Inicio */
         #start-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #050b16; display: flex; flex-direction: column;
@@ -25,7 +26,7 @@
             border: none; padding: 25px; font-size: clamp(0.9rem, 4.2vw, 1.1rem); 
             border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
             text-align: center; width: 90%; max-width: 400px; line-height: 1.5;
-            margin-bottom: 20px;
+            margin-bottom: 20px; z-index: 1000;
         }
 
         .hint-text {
@@ -45,10 +46,12 @@
             50% { opacity: 1; transform: scale(1.02); }
         }
 
-        #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: radial-gradient(circle at center, #1a2a44 0%, #050b16 100%); }
-        #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 5s ease; pointer-events: none; }
+        /* Paisaje y Estrellas */
+        #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: radial-gradient(circle at center, #1a2a44 0%, #050b16 100%); overflow: hidden; }
+        #stars { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 2; opacity: 0; transition: opacity 5s ease; pointer-events: none; }
         .star { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 6px #fff; animation: twinkle var(--d) infinite ease-in-out; }
         @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.2); } }
+        
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 22vh; background: linear-gradient(to bottom, rgba(15, 43, 16, 0) 0%, #132d14 20%, #0a1a0b 100%); z-index: 10; }
         #garden { position: absolute; bottom: 8vh; left: 0; width: 100%; height: 75vh; z-index: 15; pointer-events: none; }
         
@@ -59,6 +62,7 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #fff59d; border-radius: 50%; pointer-events: none; z-index: 1000; animation: fly 0.8s ease-out forwards; box-shadow: 0 0 10px #ffeb3b; }
         @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
 
+        /* Contenido de Fotos y Frases */
         .sequence-item { 
             position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); 
             width: 95%; display: flex; flex-direction: column; align-items: center; 
@@ -76,6 +80,7 @@
 
         .photo-frame { width: 165px; height: 165px; border-radius: 20px; border: 5px solid white; background-color: rgba(255, 255, 255, 0.15); object-fit: contain; margin: 10px 0; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
 
+        /* Mensaje Final */
         .final-message-container {
             position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
             width: 100%; text-align: center; z-index: 200; pointer-events: none;
@@ -84,7 +89,7 @@
 </head>
 <body onclick="createSparkle(event)">
 
-    <audio id="musica">
+    <audio id="musica" loop>
         <source src="Mi_universo.mp3" type="audio/mpeg">
     </audio>
 
@@ -105,12 +110,14 @@
         </div>
     </div>
 
-    <div id="sky"></div>
-    <div id="stars"></div>
+    <div id="sky">
+        <div id="stars"></div>
+    </div>
     <div id="garden"></div>
     <div id="ground"></div>
 
     <script>
+        /* --- CONFIGURACIÓN --- */
         const CANTIDAD_TOTAL_FOTOS = 39; 
         const EXTENSION = ".jpg";        
 
@@ -205,8 +212,11 @@
             document.getElementById('start-btn').style.display = 'none';
             document.querySelector('.hint-text').style.display = 'none'; 
             document.getElementById('loader-text').style.display = 'block';
+            
+            // Selección al azar de 17 fotos y 34 frases
             fotosSeleccionadas = shuffle(TODAS_LAS_FOTOS).slice(0, 17);
             frasesSeleccionadas = shuffle(TODAS_LAS_FRASES).slice(0, 34);
+
             const randomTime = Math.floor(Math.random() * (4000 - 2000 + 1)) + 2000;
             setTimeout(startMagic, randomTime);
         }
@@ -215,17 +225,28 @@
             const audio = document.getElementById('musica');
             audio.play().catch(() => {});
             document.getElementById('start-screen').style.opacity = '0';
+            
             setTimeout(() => {
                 document.getElementById('start-screen').remove();
                 setInterval(spawnFlower, 700);
-                document.getElementById('stars').style.opacity = "1";
-                for (let i = 0; i < 90; i++) {
+                
+                // Efecto de estrellas dinámicas
+                const starLayer = document.getElementById('stars');
+                starLayer.style.opacity = "1";
+                for (let i = 0; i < 120; i++) {
                     const s = document.createElement('div');
                     s.className = 'star';
                     const size = Math.random() * 2 + 0.5;
-                    s.style.cssText = `width:${size}px; height:${size}px; left:${Math.random()*100}%; top:${Math.random()*65}%; --d:${Math.random()*4+2}s;`;
-                    document.getElementById('stars').appendChild(s);
+                    s.style.cssText = `width:${size}px; height:${size}px; left:${Math.random()*100}%; top:${Math.random()*100}%; --d:${Math.random()*4+2}s;`;
+                    starLayer.appendChild(s);
                 }
+
+                // Parallax del cielo
+                setInterval(() => {
+                    const time = Date.now() * 0.00003;
+                    starLayer.style.transform = `rotate(${time}rad) scale(1.1)`;
+                }, 50);
+
                 spawnSequence();
                 masterInterval = setInterval(spawnSequence, 13800); 
             }, 1500);
