@@ -13,13 +13,13 @@
             background-color: #0b1a2e; touch-action: manipulation; 
         }
         
-        /* Pantalla de Inicio y Carga */
         #start-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background-color: #0b1a2e; display: flex; justify-content: center; 
-            align-items: center; z-index: 999; transition: opacity 1.5s ease; 
-            cursor: pointer; padding: 20px; 
+            background-color: #0b1a2e; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 999; 
+            transition: opacity 1.5s ease; cursor: pointer; padding: 20px; 
         }
+
         #start-btn { 
             background: linear-gradient(45deg, #d35400, #f39c12); color: white; 
             border: none; padding: 25px; font-size: clamp(0.9rem, 4.2vw, 1.1rem); 
@@ -28,34 +28,36 @@
         }
 
         #loader-text {
-            display: none;
+            display: none; 
             color: white;
             font-family: 'Dancing Script', cursive;
-            font-size: 2rem;
             text-align: center;
-            animation: pulse 2s infinite;
+            text-shadow: 0 0 15px rgba(255,255,255,0.5);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .internet-joke {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 10px;
+            opacity: 0.7;
+            font-weight: 300;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1.05); }
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.02); }
         }
 
-        /* Paisaje */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
         #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 5s ease; pointer-events: none; }
         
         .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 4px #fff;
-            animation: twinkle var(--d) infinite ease-in-out;
+            position: absolute; background: white; border-radius: 50%;
+            box-shadow: 0 0 4px #fff; animation: twinkle var(--d) infinite ease-in-out;
         }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } }
 
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 18vh; background: linear-gradient(to top, #0f2b10, #1b4d1d); z-index: 10; }
         #garden { position: absolute; bottom: 10vh; left: 0; width: 100%; height: 65vh; z-index: 15; pointer-events: none; }
@@ -67,20 +69,10 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 1000; animation: fly 0.8s ease-out forwards; }
         @keyframes fly { to { transform: translateY(-50px) scale(0); opacity: 0; } }
 
-        /* Contenido Central */
         .sequence-item {
-            position: absolute;
-            top: 38%; 
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 100;
-            pointer-events: none;
-            opacity: 0;
-            animation: floatingFade 12s ease-in-out forwards;
+            position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; display: flex; flex-direction: column; align-items: center;
+            z-index: 100; pointer-events: none; opacity: 0; animation: floatingFade 12s ease-in-out forwards;
         }
 
         @keyframes floatingFade {
@@ -91,24 +83,15 @@
         }
 
         .phrase {
-            color: white;
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.2rem, 6vw, 1.7rem); 
-            text-shadow: 0 2px 10px rgba(0,0,0,1);
-            text-align: center;
-            margin: 5px 0;
-            width: 100%;
+            color: white; font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.2rem, 6vw, 1.7rem); text-shadow: 0 2px 10px rgba(0,0,0,1);
+            text-align: center; margin: 5px 0; width: 100%;
         }
 
         .photo-frame {
-            width: 150px; 
-            height: 150px;
-            border-radius: 15px;
-            border: 4px solid white;
-            background-color: rgba(255, 255, 255, 0.1);
-            object-fit: contain; 
-            margin: 10px 0;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            width: 150px; height: 150px; border-radius: 15px; border: 4px solid white;
+            background-color: rgba(255, 255, 255, 0.1); object-fit: contain; 
+            margin: 10px 0; box-shadow: 0 10px 25px rgba(0,0,0,0.7);
         }
     </style>
 </head>
@@ -120,11 +103,14 @@
 
     <div id="start-screen">
         <div id="start-btn" onclick="preLoad()">
-            Feliz día, Day ❤️<br>
+            Feliz día, Day<br>
             <span style="font-size: 0.85em; font-weight: 300;">Eres lo mejor de esta vida, cuenta conmigo siempre</span><br>
             <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7;">(Toca para comenzar)</p>
         </div>
-        <div id="loader-text">Preparando sorpresa... ✨</div>
+        <div id="loader-text">
+            <span style="font-size: 2.2rem;">Preparando sorpresa... ✨</span><br>
+            <span class="internet-joke">(dependerá de tu internet XD)</span>
+        </div>
     </div>
 
     <div id="sky"></div>
@@ -165,7 +151,6 @@
             const x = e.clientX || (e.touches && e.touches[0].clientX);
             const y = e.clientY || (e.touches && e.touches[0].clientY);
             if(!x || !y) return;
-
             for(let i=0; i<5; i++){
                 const s = document.createElement('div');
                 s.className = 'sparkle';
@@ -201,7 +186,6 @@
                 }, 8000); 
                 return;
             }
-
             const container = document.createElement('div');
             container.className = 'sequence-item';
             container.innerHTML = `
@@ -213,17 +197,16 @@
             setTimeout(() => container.remove(), 12500);
         }
 
-        // --- NUEVA FUNCIÓN DE PRE-CARGA ---
         function preLoad() {
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('loader-text').style.display = 'block';
             
-            // Empezamos a mezclar en segundo plano
             shuffle(fotos);
             shuffle(phrases);
 
-            // Esperamos 5 segundos para la sorpresa
-            setTimeout(startMagic, 5000);
+            // ALEATORIEDAD: Entre 2000ms (2s) y 5000ms (5s)
+            const randomTime = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
+            setTimeout(startMagic, randomTime);
         }
 
         function startMagic() {
@@ -233,7 +216,6 @@
             setTimeout(() => {
                 document.getElementById('start-screen').remove();
                 setInterval(spawnFlower, 800);
-                
                 const starsContainer = document.getElementById('stars');
                 starsContainer.style.opacity = "1";
                 for (let i = 0; i < 80; i++) {
@@ -243,7 +225,6 @@
                     s.style.cssText = `width:${size}px; height:${size}px; left:${Math.random()*100}%; top:${Math.random()*70}%; --d:${Math.random()*3+2}s;`;
                     starsContainer.appendChild(s);
                 }
-
                 spawnSequence();
                 masterInterval = setInterval(spawnSequence, 13800); 
             }, 1500);
