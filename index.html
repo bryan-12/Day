@@ -13,6 +13,7 @@
             background-color: #0b1a2e; touch-action: manipulation; 
         }
         
+        /* Pantalla de Inicio y Carga */
         #start-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #0b1a2e; display: flex; flex-direction: column;
@@ -50,6 +51,7 @@
             50% { opacity: 1; transform: scale(1.02); }
         }
 
+        /* Elementos del Paisaje */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
         #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 5s ease; pointer-events: none; }
         
@@ -69,6 +71,7 @@
         .sparkle { position: absolute; width: 6px; height: 6px; background: #ffeb3b; border-radius: 50%; pointer-events: none; z-index: 1000; animation: fly 0.8s ease-out forwards; }
         @keyframes fly { to { transform: translateY(-50px) scale(0); opacity: 0; } }
 
+        /* Secuencia de Fotos y Frases */
         .sequence-item {
             position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%);
             width: 90%; display: flex; flex-direction: column; align-items: center;
@@ -105,7 +108,7 @@
         <div id="start-btn" onclick="preLoad()">
             Feliz día, Day<br>
             <span style="font-size: 0.85em; font-weight: 300;">Eres lo mejor de esta vida, cuenta conmigo siempre</span><br>
-            <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7;">(Toca para comenzar)</p>
+            <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7; letter-spacing: 1px;">(Toca para comenzar)</p>
         </div>
         <div id="loader-text">
             <span style="font-size: 2.2rem;">Preparando sorpresa... ✨</span><br>
@@ -150,7 +153,7 @@
         function createSparkle(e) {
             const x = e.clientX || (e.touches && e.touches[0].clientX);
             const y = e.clientY || (e.touches && e.touches[0].clientY);
-            if(!x || !y) return;
+            if(x === undefined || y === undefined) return;
             for(let i=0; i<5; i++){
                 const s = document.createElement('div');
                 s.className = 'sparkle';
@@ -190,11 +193,11 @@
             container.className = 'sequence-item';
             container.innerHTML = `
                 <div class="phrase">${phrases[fraseIndex++]}</div>
-                <img src="${fotos[fotoIndex++]}" class="photo-frame">
+                <img src="${fotos[fotoIndex++]}" class="photo-frame" alt="Foto">
                 <div class="phrase">${phrases[fraseIndex++]}</div>
             `;
             document.body.appendChild(container);
-            setTimeout(() => container.remove(), 12500);
+            setTimeout(() => { if(container.parentNode) container.remove(); }, 12500);
         }
 
         function preLoad() {
@@ -204,17 +207,20 @@
             shuffle(fotos);
             shuffle(phrases);
 
-            // ALEATORIEDAD: Entre 2000ms (2s) y 5000ms (5s)
             const randomTime = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
             setTimeout(startMagic, randomTime);
         }
 
         function startMagic() {
-            document.getElementById('musica').play();
+            const audio = document.getElementById('musica');
+            audio.play().catch(e => console.log("Audio play blocked"));
+            
             document.getElementById('start-screen').style.opacity = '0';
             
             setTimeout(() => {
-                document.getElementById('start-screen').remove();
+                const screen = document.getElementById('start-screen');
+                if(screen) screen.remove();
+                
                 setInterval(spawnFlower, 800);
                 const starsContainer = document.getElementById('stars');
                 starsContainer.style.opacity = "1";
