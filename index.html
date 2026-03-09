@@ -13,6 +13,7 @@
             background-color: #050b16; touch-action: manipulation; 
         }
         
+        /* --- INTERFAZ DE INICIO --- */
         #start-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #050b16; display: flex; flex-direction: column;
@@ -28,28 +29,37 @@
             margin-bottom: 20px;
         }
 
-        .hint-text {
-            color: white; font-size: 0.75rem; opacity: 0.5; font-weight: 300;
-            text-align: center; max-width: 280px; line-height: 1.4;
-        }
-
-        #loader-text {
-            display: none; color: white; font-family: 'Caveat', cursive;
-            text-align: center; animation: pulse 2s infinite ease-in-out;
-        }
-
+        .hint-text { color: white; font-size: 0.75rem; opacity: 0.5; font-weight: 300; text-align: center; max-width: 280px; line-height: 1.4; }
+        #loader-text { display: none; color: white; font-family: 'Caveat', cursive; text-align: center; animation: pulse 2s infinite ease-in-out; }
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
+        /* --- CIELO, ESTRELLAS Y PARPADEO --- */
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: radial-gradient(circle at center, #1a2a44 0%, #050b16 100%); overflow: hidden; }
         #stars { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 2; opacity: 0; transition: opacity 5s ease; }
-        .star { position: absolute; background: white; border-radius: 50%; box-shadow: 0 0 6px #fff; animation: twinkle var(--d) infinite ease-in-out; }
         
+        .star { 
+            position: absolute; background: white; border-radius: 50%; 
+            box-shadow: 0 0 6px #fff; 
+            animation: twinkle var(--d) infinite ease-in-out; 
+        }
+        @keyframes twinkle { 
+            0%, 100% { opacity: 0.3; transform: scale(1); } 
+            50% { opacity: 1; transform: scale(1.2); } 
+        }
+        
+        /* --- ESCENARIO Y FLORES --- */
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 22vh; background: linear-gradient(to bottom, transparent 0%, #132d14 20%, #0a1a0b 100%); z-index: 10; }
         #garden { position: absolute; bottom: 8vh; left: 0; width: 100%; height: 75vh; z-index: 15; pointer-events: none; }
         
         .flower { position: absolute; bottom: 0; transform-origin: bottom center; animation: growAndFade 28s ease-in-out forwards; }
-        @keyframes growAndFade { 0% { transform: scale(0); opacity: 0; } 10% { transform: scale(1); opacity: 1; } 90% { opacity: 1; } 100% { transform: scale(0.5); opacity: 0; } }
+        @keyframes growAndFade { 
+            0% { transform: scale(0); opacity: 0; } 
+            10% { transform: scale(1); opacity: 1; } 
+            90% { opacity: 1; } 
+            100% { transform: scale(0.5); opacity: 0; } 
+        }
         
+        /* --- FOTOS Y MARCO APERLADO --- */
         .sequence-item { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 100%; display: flex; flex-direction: column; align-items: center; 
@@ -59,8 +69,7 @@
 
         @keyframes floatingFade { 
             0% { opacity: 0; transform: translate(-50%, -45%); } 
-            15% { opacity: 1; transform: translate(-50%, -50%); } 
-            85% { opacity: 1; transform: translate(-50%, -50%); } 
+            15%, 85% { opacity: 1; transform: translate(-50%, -50%); } 
             100% { opacity: 0; transform: translate(-50%, -55%); } 
         }
         
@@ -72,36 +81,46 @@
             line-height: 1.2;
         }
 
-        .photo-frame { width: 170px; height: 170px; border-radius: 20px; border: 5px solid white; object-fit: contain; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+        .photo-frame { 
+            width: 170px; height: 170px; 
+            border-radius: 20px; border: 5px solid white; 
+            object-fit: contain; 
+            background-color: rgba(255, 255, 255, 0.9); /* Relleno sólido aperlado */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8); 
+        }
+
+        /* --- EFECTO DE CLIC (CHISPAS) --- */
+        .sparkle { 
+            position: absolute; width: 5px; height: 5px; 
+            background: #fff59d; border-radius: 50%; 
+            pointer-events: none; z-index: 1000; 
+            box-shadow: 0 0 12px #ffeb3b;
+            animation: explosion 0.8s ease-out forwards; 
+        }
+        @keyframes explosion { 
+            0% { transform: translate(0, 0) scale(1); opacity: 1; } 
+            100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } 
+        }
 
         .final-message-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center;
             z-index: 500; pointer-events: none; padding: 20px;
         }
-
-        .sparkle { position: absolute; width: 6px; height: 6px; background: #fff59d; border-radius: 50%; pointer-events: none; z-index: 1000; animation: fly 0.8s ease-out forwards; box-shadow: 0 0 10px #ffeb3b; }
-        @keyframes fly { to { transform: translateY(-60px) scale(0); opacity: 0; } }
     </style>
 </head>
-<body onclick="createSparkle(event)">
+<body onmousedown="createSparkle(event)" ontouchstart="createSparkle(event)">
 
-    <audio id="musica" loop>
-        <source src="Mi_universo.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="musica" loop><source src="Mi_universo.mp3" type="audio/mpeg"></audio>
 
     <div id="start-screen">
         <div id="start-btn" onclick="preLoad()">
             Feliz día, Day<br>
-            <span style="font-size: 0.85em; font-weight: 300;">Eres lo mejor de esta vida, cuenta conmigo siempre</span><br>
+            <span style="font-size: 0.85em; font-weight: 300;">Eres lo mejor de esta vida, cuenta conmigo</span><br>
             <p style="font-size: 0.6em; margin-top: 20px; opacity: 0.7;">(Toca para comenzar)</p>
         </div>
-        <div class="hint-text">
-            Vuelve cuando quieras, podría haber nuevas fotos y mensajes para ti. ✨
-        </div>
-        <div id="loader-text">
-            <span style="font-size: 2.2rem;">Preparando sorpresa... ✨</span>
-        </div>
+        <div class="hint-text">Vuelve cuando quieras, podria haber frases nuevas. ✨</div>
+        <div id="loader-text"><span style="font-size: 2.2rem;">Preparando sorpresa... ✨</span></div>
     </div>
 
     <div id="sky"><div id="stars"></div></div>
@@ -109,6 +128,7 @@
     <div id="ground"></div>
 
     <script>
+        // --- BASE DE DATOS ---
         const CANTIDAD_TOTAL_FOTOS = 39; 
         const TODAS_LAS_FOTOS = Array.from({length: CANTIDAD_TOTAL_FOTOS}, (_, i) => `${i + 1}.jpg`);
         
@@ -135,12 +155,9 @@
             "Eres el glitch más hermoso en mi simulación", "Contigo, todo es mejor"
         ];
 
-        let fotosSeleccionadas = [];
-        let frasesSeleccionadas = [];
-        let fotoIndex = 0;
-        let fraseIndex = 0;
-        let masterInterval;
+        let fotosSeleccionadas = [], frasesSeleccionadas = [], fotoIndex = 0, fraseIndex = 0, masterInterval;
 
+        // --- FUNCIONES DE MEZCLA ---
         function shuffle(array) {
             let arr = [...array];
             for (let i = arr.length - 1; i > 0; i--) {
@@ -150,33 +167,39 @@
             return arr;
         }
 
-        const sunflowerSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><path d="M50,250 Q40,160 50,100" stroke="#1b4d1d" stroke-width="5" fill="none"/><g transform="translate(50,100)">${Array.from({length:12}, (_,i)=>`<ellipse cx="0" cy="-25" rx="8" ry="28" fill="#fbc02d" transform="rotate(${i*30})"/>`).join('')}<circle cx="0" cy="0" r="15" fill="#3e2723"/></g></svg>`;
-        
-        const higanbanaSVG = (size) => `<svg viewBox="0 0 100 250" width="${size}" height="${size * 2.5}"><path d="M50,250 L50,130" stroke="#132d14" stroke-width="2" fill="none"/><g transform="translate(50,130)">${Array.from({length:8}, (_,i)=>`<path d="M0,0 Q-20,-40 -40,-10" stroke="#d32f2f" stroke-width="1.5" fill="none" transform="rotate(${i*45})"/>`).join('')}<circle cx="0" cy="0" r="4" fill="#880e4f"/></g></svg>`;
+        // --- GENERADORES DE FLORES (SVG) ---
+        const sunflowerSVG = (s) => `<svg viewBox="0 0 100 250" width="${s}" height="${s*2.5}"><path d="M50,250 Q40,160 50,100" stroke="#1b4d1d" stroke-width="5" fill="none"/><g transform="translate(50,100)">${Array.from({length:12}, (_,i)=>`<ellipse cx="0" cy="-25" rx="8" ry="28" fill="#fbc02d" transform="rotate(${i*30})"/>`).join('')}<circle cx="0" cy="0" r="15" fill="#3e2723"/></g></svg>`;
+        const higanbanaSVG = (s) => `<svg viewBox="0 0 100 250" width="${s}" height="${s*2.5}"><path d="M50,250 L50,130" stroke="#132d14" stroke-width="2" fill="none"/><g transform="translate(50,130)">${Array.from({length:8}, (_,i)=>`<path d="M0,0 Q-20,-40 -40,-10" stroke="#d32f2f" stroke-width="1.5" fill="none" transform="rotate(${i*45})"/>`).join('')}<circle cx="0" cy="0" r="4" fill="#880e4f"/></g></svg>`;
 
+        // --- FUNCIÓN DE CHISPAS AL TOCAR ---
         function createSparkle(e) {
-            const x = e.clientX || (e.touches && e.touches[0].clientX);
-            const y = e.clientY || (e.touches && e.touches[0].clientY);
-            if(x === undefined) return;
-            for(let i=0; i<5; i++){
+            const x = (e.clientX || (e.touches && e.touches[0].clientX));
+            const y = (e.clientY || (e.touches && e.touches[0].clientY));
+            if(!x) return;
+            for(let i=0; i<8; i++){
                 const s = document.createElement('div');
                 s.className = 'sparkle';
                 s.style.left = x + 'px'; s.style.top = y + 'px';
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 100 + 50;
+                s.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+                s.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
                 document.body.appendChild(s);
                 setTimeout(() => s.remove(), 800);
             }
         }
 
+        // --- LÓGICA DEL JARDÍN ---
         function spawnFlower() {
-            const flower = document.createElement('div');
-            flower.className = 'flower';
-            flower.style.left = (Math.random() * 90) + '%';
-            const size = Math.random() * 30 + 40;
-            flower.innerHTML = Math.random() > 0.5 ? sunflowerSVG(size) : higanbanaSVG(size);
-            document.getElementById('garden').appendChild(flower);
-            setTimeout(() => flower.remove(), 28000);
+            const f = document.createElement('div'); f.className = 'flower';
+            f.style.left = (Math.random() * 90) + '%';
+            const s = Math.random() * 30 + 40;
+            f.innerHTML = Math.random() > 0.5 ? sunflowerSVG(s) : higanbanaSVG(s);
+            document.getElementById('garden').appendChild(f);
+            setTimeout(() => f.remove(), 28000);
         }
 
+        // --- LÓGICA DE LA SECUENCIA ---
         function spawnSequence() {
             if (fotoIndex >= fotosSeleccionadas.length) {
                 clearInterval(masterInterval);
@@ -189,45 +212,35 @@
                 }, 4000); 
                 return;
             }
-            const container = document.createElement('div');
-            container.className = 'sequence-item';
-            container.innerHTML = `
-                <div class="phrase">${frasesSeleccionadas[fraseIndex++]}</div>
-                <img src="${fotosSeleccionadas[fotoIndex++]}" class="photo-frame">
-                <div class="phrase">${frasesSeleccionadas[fraseIndex++]}</div>
-            `;
-            document.body.appendChild(container);
-            setTimeout(() => container.remove(), 12500);
+            const c = document.createElement('div'); c.className = 'sequence-item';
+            c.innerHTML = `<div class="phrase">${frasesSeleccionadas[fraseIndex++]}</div><img src="${fotosSeleccionadas[fotoIndex++]}" class="photo-frame"><div class="phrase">${frasesSeleccionadas[fraseIndex++]}</div>`;
+            document.body.appendChild(c); 
+            setTimeout(() => c.remove(), 12500);
         }
 
+        // --- INICIO Y CARGA ---
         function preLoad() {
             document.getElementById('start-btn').style.display = 'none';
-            document.querySelector('.hint-text').style.display = 'none';
             document.getElementById('loader-text').style.display = 'block';
-            fotosSeleccionadas = shuffle(TODAS_LAS_FOTOS).slice(0, 17);
-            frasesSeleccionadas = shuffle(TODAS_LAS_FRASES).slice(0, 34);
+            fotosSeleccionadas = shuffle([...TODAS_LAS_FOTOS]).slice(0, 17);
+            frasesSeleccionadas = shuffle([...TODAS_LAS_FRASES]).slice(0, 34);
             setTimeout(startMagic, 3000);
         }
 
         function startMagic() {
-            const audio = document.getElementById('musica');
-            audio.play().catch(() => {});
+            document.getElementById('musica').play().catch(()=>{});
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('start-screen').remove();
                 setInterval(spawnFlower, 800);
-                const starLayer = document.getElementById('stars');
-                starLayer.style.opacity = "1";
-                for (let i = 0; i < 100; i++) {
-                    const s = document.createElement('div');
-                    s.className = 'star';
-                    s.style.cssText = `width:2px; height:2px; left:${Math.random()*100}%; top:${Math.random()*100}%; --d:${Math.random()*4+2}s;`;
-                    starLayer.appendChild(s);
+                const sl = document.getElementById('stars'); sl.style.opacity = "1";
+                for (let i = 0; i < 120; i++) { 
+                    const s = document.createElement('div'); s.className = 'star';
+                    s.style.cssText = `width:2px; height:2px; left:${Math.random()*100}%; top:${Math.random()*100}%; --d:${Math.random()*3+2}s;`;
+                    sl.appendChild(s);
                 }
-                setInterval(() => {
-                    starLayer.style.transform = `rotate(${Date.now() * 0.00002}rad) scale(1.1)`;
-                }, 50);
-                spawnSequence();
+                setInterval(() => { sl.style.transform = `rotate(${Date.now() * 0.00002}rad) scale(1.1)`; }, 50);
+                spawnSequence(); 
                 masterInterval = setInterval(spawnSequence, 13800); 
             }, 1500);
         }
