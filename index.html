@@ -252,21 +252,31 @@
                 masterInterval = setInterval(spawnSequence, 13800); 
             }, 1500);
         }
-        // --- SISTEMA DE ESTELA MÁGICA CON LÍMITE DE SEGURIDAD ---
+        // --- SISTEMA DE ESTELA MÁGICA CORREGIDO ---
+        let isDrawing = false;
         let lastSparkleTime = 0;
+
         function handleMove(e) {
+            // En PC (mouse), solo si está el botón presionado. En Celular (touch), siempre que mueva.
+            if (e.type === 'mousemove' && !isDrawing) return;
+
             const now = Date.now();
-            // Solo permite crear chispas cada 60ms para proteger el rendimiento
             if (now - lastSparkleTime > 60) { 
+                // Detectar posición correcta para Mouse o Touch
                 const pos = e.touches ? e.touches[0] : e;
                 createSparkle(pos);
                 lastSparkleTime = now;
             }
         }
 
-        // Escucha el movimiento del ratón y del dedo
+        // Eventos para PC (Solo chispas si mantiene el clic presionado)
+        document.addEventListener('mousedown', () => isDrawing = true);
+        document.addEventListener('mouseup', () => isDrawing = false);
         document.addEventListener('mousemove', handleMove);
+
+        // Eventos para CELULAR (Sigue el dedo mientras se mueve en la pantalla)
         document.addEventListener('touchmove', handleMove, {passive: true});
+        document.addEventListener('touchstart', (e) => createSparkle(e.touches[0]), {passive: true});
     </script>
 </body>
 </html>
