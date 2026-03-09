@@ -27,7 +27,27 @@
         }
 
         #sky { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: background 15s ease-in-out; background: #0b1a2e; }
-        #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 8s ease; }
+        #stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 8s ease; overflow: hidden; }
+        
+        /* --- ANIMACIÓN DE ESTRELLAS --- */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #fff;
+            animation: twinkle var(--duration) infinite ease-in-out, moveStar 150s linear infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes moveStar {
+            from { transform: translateX(0); }
+            to { transform: translateX(50px); } /* Movimiento lateral muy lento */
+        }
+
         #ground { position: absolute; bottom: 0; left: 0; width: 100%; height: 18vh; background: linear-gradient(to top, #0f2b10, #1b4d1d); z-index: 10; }
         #garden { position: absolute; bottom: 10vh; left: 0; width: 100%; height: 65vh; z-index: 15; pointer-events: none; }
         
@@ -74,8 +94,8 @@
         }
 
         .photo-frame {
-            width: 150px; 
-            height: 150px;
+            width: 140px; 
+            height: 140px;
             border-radius: 12px;
             border: 3px solid white;
             background-color: rgba(255, 255, 255, 0.05);
@@ -155,7 +175,7 @@
             const flower = document.createElement('div');
             flower.className = 'flower';
             const isSunflower = Math.random() > 0.45;
-            const size = (Math.random() * 35 + 40) * (isSunflower ? 1 : 0.75);
+            const size = (Math.random() * 30 + 35) * (isSunflower ? 1 : 0.8);
             flower.style.left = (Math.random() * 92 + 4) + '%';
             flower.innerHTML = isSunflower ? sunflowerSVG(size) : higanbanaSVG(size);
             document.getElementById('garden').appendChild(flower);
@@ -163,11 +183,8 @@
         }
 
         function spawnSequence() {
-            // Si ya mostramos las 17 fotos, preparamos el final
             if (fotoIndex >= fotos.length) {
                 clearInterval(masterInterval);
-                
-                // Tiempo de espera para que termine el Fade Out de la última foto antes del mensaje final
                 setTimeout(() => {
                     const final = document.createElement('div');
                     final.className = 'sequence-item';
@@ -176,11 +193,7 @@
                     final.style.top = "40%"; 
                     final.innerHTML = `<div class="phrase" style="color:#f39c12; font-size: 2.3rem; font-weight:bold; animation: floatingFade 8s ease-in-out forwards;">Para Day, I miss you ❤️</div>`;
                     document.body.appendChild(final);
-                    
-                    // RECARGA AUTOMÁTICA tras 8 segundos del mensaje final
-                    setTimeout(() => {
-                        location.reload(); 
-                    }, 8500);
+                    setTimeout(() => location.reload(), 8500);
                 }, 10000); 
                 return;
             }
@@ -221,15 +234,24 @@
                 setInterval(changeSky, 20000);
                 setInterval(spawnFlower, 750);
                 
+                // --- GENERAR ESTRELLAS ANIMADAS ---
                 const starsContainer = document.getElementById('stars');
-                for (let i = 0; i < 90; i++) {
+                for (let i = 0; i < 100; i++) {
                     const s = document.createElement('div');
-                    s.style.cssText = `position:absolute; width:1.5px; height:1.5px; background:white; left:${Math.random()*100}%; top:${Math.random()*65}%; border-radius:50%; box-shadow:0 0 5px #fff;`;
+                    const size = Math.random() * 2 + 1;
+                    const duration = Math.random() * 3 + 2;
+                    s.className = 'star';
+                    s.style.cssText = `
+                        width: ${size}px; 
+                        height: ${size}px; 
+                        left: ${Math.random() * 100}%; 
+                        top: ${Math.random() * 70}%; 
+                        --duration: ${duration}s;
+                    `;
                     starsContainer.appendChild(s);
                 }
 
                 spawnSequence();
-                // 13.8 segundos x 17 fotos = aprox 235 segundos (4 minutos)
                 masterInterval = setInterval(spawnSequence, 13800); 
             }, 2000);
         }
